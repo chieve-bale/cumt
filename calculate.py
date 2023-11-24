@@ -1,5 +1,5 @@
 import numpy as np
-from math import cos,sin,pi
+import math
 ##单位统一为：长度mm，力N，应力MPa，默认E=206000MPa ，角度默认 °（逆时针为正）
 
 ##杆件索引使用杆件的编码不使用节点编码！！！
@@ -7,34 +7,38 @@ from math import cos,sin,pi
 
 class gan_jian:##定义杆件的原始单元刚度矩阵
     
-    def __init__(self,xu_hao=0,jie_dian=(0,0),E=206000,A=1,I=1,L=1,a=0):##类初始化
-        self.xu_hao=xu_hao
-        self.jie_dian=jie_dian
-        self.E=E
-        self.A=A
-        self.I=I
-        self.i=E*A/L
-        self.L=L
-        self.a=a
+    def __init__(self,xu_hao=0,jie_dian=(0,0),E=206000,A=1,I=1,L=1,a=0,cos=0,sin=0):##类初始化
+        self.xu_hao=xu_hao    ##杆件序号
+        self.jie_dian=jie_dian##杆件节点
+        self.E=E              ##弹性模量
+        self.A=A              ##截面面积
+        self.I=I              ##截面惯性矩
+        self.i=E*A/L          ##杆件线刚度
+        self.L=L              ##杆件长度
+        self.a=a              ##杆件角度，顺时针为正
+        self.sin=sin          ##杆件角度正弦
+        self.cos=cos          ##杆件角度余弦
               
     def TT(self):##局部坐标系到整体坐标系的 坐标转换矩阵
-        a=self.a*180/pi
-        s=-0.894
-        c=0.447   
-        T1=np.array([[c,s,0,0,0,0],\
-                     [-s,c,0,0,0,0],\
-                     [0,0,1,0,0,0],\
-                     [0,0,0,c,s,0],\
-                     [0,0,0,-s,c,0],\
-                     [0,0,0,0,0,1]])
-        T2=np.array([[cos(a)  ,sin(a)  ,0       ,0       ,0       ,0],\
-                    [-sin(a) ,cos(a)  ,0       ,0       ,0       ,0],\
-                    [0       ,0       ,1       ,0       ,0       ,0],\
-                    [0       ,0       ,0       ,cos(a)  ,sin(a)  ,0],\
-                    [0       ,0       ,0       ,-sin(a) ,cos(a)  ,0],\
-                    [0       ,0       ,0       ,0       ,0       ,1]])
-        
-        return T1
+        if self.cos==0 and self.sin==0:##输入杆件三角函数
+            a=(self.a/180)*math.pi
+            return np.array([[ math.cos(a) ,math.sin(a)  ,0       ,0             ,0            ,0],\
+                             [-math.sin(a) ,math.cos(a)  ,0       ,0             ,0            ,0],\
+                             [0            ,0            ,1       ,0             ,0            ,0],\
+                             [0            ,0            ,0       , math.cos(a)  ,math.sin(a)  ,0],\
+                             [0            ,0            ,0       ,-math.sin(a)  ,math.cos(a)  ,0],\
+                             [0            ,0            ,0       ,0             ,0            ,1]])
+        else:##输入杆件角度
+            s=self.sin
+            c=self.cos
+            s=-0.894
+            c=0.447   
+            return np.array([[c,s,0,0,0,0],\
+                             [-s,c,0,0,0,0],\
+                             [0,0,1,0,0,0],\
+                             [0,0,0,c,s,0],\
+                             [0,0,0,-s,c,0],\
+                             [0,0,0,0,0,1]])
         
     def jv_bu_zuo_biao_xi(self,gg='00'):  ##输入杆件代码,代码为数字字符，输出局部坐标系刚度矩阵。按照课本P227表格顺序
         i=self.i
@@ -54,6 +58,12 @@ class gan_jian:##定义杆件的原始单元刚度矩阵
 
     def zheng_ti_zuo_biao_xi(self):
         return self.TT().T@self.jv_bu_zuo_biao_xi()@self.TT()
+
+
+
+
+
+    
 a=np.array([[168,0,0,-168,0,0],[0,8.064,20.16,0,-8.064,20.16],[0,20.16,67.2,0,-20.16,33.6],[-168,0,0,168,0,0],[0,-8.064,-20.16,0,8.064,-20.16],[0,20.16,33.6,0,-20.16,67.2]])
 b=np.array([[150.3,0,0,-150.3,0,0],[0,5.771,16.13,0,-5.771,16.13],[0,16.13,60.1,0,-16.13,30.1],[-150.3,0,0,150.3,0,0],[0,-5.771,-16.13,0,5.771,-16.13],[0,16.13,30.1,0,-16.13,60.1]])
 c=gan_jian().TT().T@b@gan_jian().TT()
