@@ -5,8 +5,9 @@ from math import cos,sin,pi
 
 class gan_jian:##定义杆件的原始单元刚度矩阵
     
-    def __init__(self,xu_hao=0,E=206000,A=1,I=1,L=1,a=0):##类初始化
+    def __init__(self,xu_hao=0,jie_dian=(0,0),E=206000,A=1,I=1,L=1,a=0):##类初始化
         self.xu_hao=xu_hao
+        self.jiie_dian=jie_dian
         self.E=E
         self.A=A
         self.I=I
@@ -59,6 +60,9 @@ print(t.T,k,t)
 print(t.T@k@t)
 
 print(gj.zheng_ti_zuo_biao_xi())
+
+
+
 
 ##a=np.array([[150.3,0,0,-150.3,0,0],[0,5.771,16.13,0,-5.771,16.13],[0,16.13,60.1,0,-16.13,30.1],[-150.3,0,0,150.3,0,0],[0,-5.771,-16.13,0,5.771,-16.13],[0,16.13,30.1,0,-16.13,60.1]])
 
