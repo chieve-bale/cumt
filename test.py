@@ -6,5 +6,10 @@ import numpy as np
 k=np.array([[202.67,-57.79,14430],[-57.79,129.42,-12950],[14430,-12950,127310000]])
 f=np.array([[50000,30000,20000000]]).T
 kk=np.linalg.inv(k)
+print(k)
+print(f)
+print(f.T)
+
 d=kk@f
 print(d)
+[[1,2,3]]

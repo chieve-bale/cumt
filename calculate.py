@@ -49,7 +49,7 @@ class gan_jian:##定义杆件的原始单元刚度矩阵
                 return np.array([[i        ,0         ,0         ,-i      ,0         ,0        ],\
                                  [0        ,12*i/L/L  ,6*i/L     ,0       ,-12*i/L/L ,6*i/L    ],\
                                  [0        ,6*i/L     ,4*i       ,0       ,-6*i/L    ,2*i      ],\
-                                 [-i       ,0         ,0         ,-i      ,0         ,0        ],\
+                                 [-i       ,0         ,0         ,i      ,0         ,0        ],\
                                  [0        ,-12*i/L/L ,-6*i/L    ,0       ,12*i/L/L  ,-6*i/L   ],\
                                  [0        ,6*i/L     ,2*i       ,0       ,-6*i/L    ,4*i      ]])
             case '01':
@@ -148,26 +148,49 @@ def gan_jian_jv_zhen(jie_dian_shu,gan_jian_shu,gan_jian_lib):##输入节点数�
 
 ###四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四###
 
-def hou_chu_li(jv_zhen):
-    pass
+def hou_chu_li(jv_zhen,force,wei_yi):
+    rows_to_delete=[]
+    cols_to_delete=[]
+    lens=len(wei_yi[0])
+    for x in range(lens):
+        if wei_yi[0][x]==0:
+            rows_to_delete+=[x]
+    for y in range(lens):
+        if wei_yi[0][y]==0:
+            cols_to_delete+=[y]
+##    print(rows_to_delete)
+##    print(cols_to_delete)
+    jv_zhen=np.delete(jv_zhen,    rows_to_delete,axis=0)
+##    print(jv_zhen)
+    jv_zhen=np.delete(jv_zhen,cols_to_delete,axis=1)
+##    print(jv_zhen)
+    force=np.delete(force,cols_to_delete,axis=1)
+    return [jv_zhen,force]
+
+###五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五###            
 
 def ji_suan_wei_yi(jv_zhen,force):
     k_ni=np.linalg.inv(jv_zhen)##求k的逆
     wei_yi=k_ni@force
     return wei_yi
-    
 
-
+###六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六###    
 
 def main():
     gg=gan_jian_lib()
     gg.add(file=1)
     k=gan_jian_jv_zhen(jie_dian_shu=3,gan_jian_shu=2,gan_jian_lib=gg.table)
-    
+##    print(k)
     f=np.array([[0,0,0,50000,30000,20000000,0,0,0]])
-
-    print(np.linalg.inv(k))
+    d=np.array([[0,0,0,1,1,1,0,0,0]])
+    h=hou_chu_li(k,f,d)
+    k=h[0]
+    f=h[1]
+##    print(k,'\n',f)
     print(ji_suan_wei_yi(k,f.T))
+
+##    print(np.linalg.inv(k))
+##    print(ji_suan_wei_yi(k,f.T))
 if __name__=='__main__':
     main()
 
