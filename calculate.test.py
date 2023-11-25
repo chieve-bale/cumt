@@ -135,11 +135,11 @@ def gan_jian_list(gan_jian_shu,jie_dian):
         
     return[{'gan_jian_xu_hao':0,'jie_dian':(0,1),'c':a},{'gan_jian_xu_hao':1,'jie_dian':(1,2),'c':c}]
 
-def gan_jian_jv_zhen(jie_dian_shu,gan_jian_shu,gan_jian_list):##输入节点数和杆件数
+def gan_jian_jv_zhen(jie_dian_shu=0,gan_jian_shu=0,gan_jian_lib):##输入节点数和杆件数
     jv_zhen=np.zeros((jie_dian_shu*3,jie_dian_shu*3))##创建初始 结构原始刚度矩阵
 
 
-    for i in gan_jian_list:###这段代码繁杂但nb，可以实现杆端编号不连续（例如五号杆件两端节点为3，9），或者两个节点中间有n多个杆
+    for i in gan_jian_lib:###这段代码繁杂但nb，可以实现杆端编号不连续（例如五号杆件两端节点为3，9），或者两个节点中间有n多个杆
         for x in range(3):
             for y in range(3):                
                 jv_zhen[i['jie_dian'][0]*3+x,i['jie_dian'][0]*3+y]=jv_zhen[i['jie_dian'][0]*3+x,i['jie_dian'][0]*3+y]+i['c'][x,y]
