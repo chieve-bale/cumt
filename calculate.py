@@ -1,15 +1,11 @@
 import numpy as np
 import math
+import json
 ##单位统一为：长度mm，力N，应力MPa，默认E=206000MPa ，角度默认 °（逆时针为正）
 
 ##杆件索引使用杆件的编码不使用节点编码！！！
 
-class gan_jian_lib:##定义杆件库
-    
-    def add():
-        while can_shu!="q":
-            can_shu=input("输入杆件参数（q退出输入）：")
-    
+   
 class gan_jian:##定义杆件的原始单元刚度矩阵
     
     def __init__(self,xu_hao=0,jie_dian=(0,0),E=206000,A=1,I=1,L=1,a=0,cos=0,sin=0):##类初始化
@@ -64,16 +60,46 @@ class gan_jian:##定义杆件的原始单元刚度矩阵
     def zheng_ti_zuo_biao_xi(self):
         return self.TT().T@self.jv_bu_zuo_biao_xi()@self.TT()
 
+#######################################################################################################################################################################    
+
+class gan_jian_lib:##定义杆件库
+    def __init__(self):
+        self.table=[]
     
-
-
+    def add(self):
+##        can_shu={'xu_hao':0,'jie_dian':(0,0),'E':206000,'A':1,'I':1,'L':1,'a':0,'cos':0,'sin':0}
+        while True:
+            can_shu={'xu_hao':0,'jie_dian':(0,0),'E':206000,'A':1,'I':1,'L':1,'a':0,'cos':0,'sin':0}
+            can_shu=input("按照字典输入杆件参数{'xu_hao':0,'jie_dian':(0,0),'E':206000,'A':1,'I':1,'L':1,'a':0,'cos':0,'sin':0}（q退出输入）：")
+            len_can_shu=len(can_shu)
+            if can_shu=='q':
+                break
+            elif can_shu=='show':
+                print(self.table)
+            elif can_shu=='ok':
+                print(self.table)
+                return self.table
+                break
+            elif len(can_shu) > 5:
+                can_shu=eval(can_shu)
+                self.table+=[gan_jian(xu_hao=can_shu['xu_hao'],\
+                             jie_dian=can_shu['jie_dian'],\
+                             E=can_shu['E'],\
+                             A=can_shu['A'],\
+                             I=can_shu['I'],\
+                             L=can_shu['L'],\
+                             a=can_shu['a'],\
+                             cos=can_shu['cos'],\
+                             sin=can_shu['sin'])]
+            else:
+                print("输入有误，请重新输入")
 
 
 
     
-a=np.array([[168,0,0,-168,0,0],[0,8.064,20.16,0,-8.064,20.16],[0,20.16,67.2,0,-20.16,33.6],[-168,0,0,168,0,0],[0,-8.064,-20.16,0,8.064,-20.16],[0,20.16,33.6,0,-20.16,67.2]])
-b=np.array([[150.3,0,0,-150.3,0,0],[0,5.771,16.13,0,-5.771,16.13],[0,16.13,60.1,0,-16.13,30.1],[-150.3,0,0,150.3,0,0],[0,-5.771,-16.13,0,5.771,-16.13],[0,16.13,30.1,0,-16.13,60.1]])
-c=gan_jian().TT().T@b@gan_jian().TT()
+##a=np.array([[168,0,0,-168,0,0],[0,8.064,20.16,0,-8.064,20.16],[0,20.16,67.2,0,-20.16,33.6],[-168,0,0,168,0,0],[0,-8.064,-20.16,0,8.064,-20.16],[0,20.16,33.6,0,-20.16,67.2]])
+##b=np.array([[150.3,0,0,-150.3,0,0],[0,5.771,16.13,0,-5.771,16.13],[0,16.13,60.1,0,-16.13,30.1],[-150.3,0,0,150.3,0,0],[0,-5.771,-16.13,0,5.771,-16.13],[0,16.13,30.1,0,-16.13,60.1]])
+##c=gan_jian().TT().T@b@gan_jian().TT()
 
 def gan_jian_list(gan_jian_shu,jie_dian):
     for i in range(gan_jian_shu):
@@ -104,17 +130,34 @@ def gan_jian_jv_zhen(jie_dian_shu,gan_jian_shu,gan_jian_list):##输入节点数�
 
     return jv_zhen##原始刚度矩阵
 
-print(gan_jian_jv_zhen(3,2,gan_jian_list))
+##print(gan_jian_jv_zhen(3,2,gan_jian_list))
 
 def hou_chu_li(jv_zhen):
     pass
     
-    
+gan_jian_lib().add()
+
+
+
+
+
+
+
+
+
+
+##############################################################################################################
 def main():
+##    {'I':40000000000,'A':400000,'E':210000,'L':5590,'xu_hao':1,'a':0}
+##    gj=gan_jian(I=40000000000,A=400000,E=210000,L=5590,xu_hao=1,a=0)
+##    t=gj.TT()
+##    k=gj.jv_bu_zuo_biao_xi()
+##    print(t.T,k,t)
+##    print(t.T@k@t)
     pass
 
 if __name__=='__main__':
-    main
+    main()
 
 
 
