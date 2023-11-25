@@ -122,7 +122,19 @@ class gan_jian_lib:##定义杆件库
         print(self.table)
         return self.table
         
-###三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三###
+
+    
+##a=np.array([[168,0,0,-168,0,0],[0,8.064,20.16,0,-8.064,20.16],[0,20.16,67.2,0,-20.16,33.6],[-168,0,0,168,0,0],[0,-8.064,-20.16,0,8.064,-20.16],[0,20.16,33.6,0,-20.16,67.2]])
+##b=np.array([[150.3,0,0,-150.3,0,0],[0,5.771,16.13,0,-5.771,16.13],[0,16.13,60.1,0,-16.13,30.1],[-150.3,0,0,150.3,0,0],[0,-5.771,-16.13,0,5.771,-16.13],[0,16.13,30.1,0,-16.13,60.1]])
+##c=gan_jian().TT().T@b@gan_jian().TT()
+
+def gan_jian_list(gan_jian_shu,jie_dian):
+    for i in range(gan_jian_shu):
+        ll=[]
+        l=gan_jian(xu_hao=i,jie_dian=jie_dian,)
+        
+    return[{'gan_jian_xu_hao':0,'jie_dian':(0,1),'c':a},{'gan_jian_xu_hao':1,'jie_dian':(1,2),'c':c}]
+
 def gan_jian_jv_zhen(jie_dian_shu,gan_jian_shu,gan_jian_list):##输入节点数和杆件数
     jv_zhen=np.zeros((jie_dian_shu*3,jie_dian_shu*3))##创建初始 结构原始刚度矩阵
 
@@ -140,23 +152,43 @@ def gan_jian_jv_zhen(jie_dian_shu,gan_jian_shu,gan_jian_list):##输入节点数�
         for x in range(3):
             for y in range(3):                
                 jv_zhen[i['jie_dian'][1]*3+x,i['jie_dian'][1]*3+y]=jv_zhen[i['jie_dian'][1]*3+x,i['jie_dian'][1]*3+y]+i['c'][x+3,y+3]
+
+
+
     return jv_zhen##原始刚度矩阵
 
-###四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四###
-def gan_jian_list(gan_jian_shu,jie_dian):
-    for i in range(gan_jian_shu):
-        ll=[]
-        l=gan_jian(xu_hao=i,jie_dian=jie_dian,)        
-    return[{'gan_jian_xu_hao':0,'jie_dian':(0,1),'c':a},{'gan_jian_xu_hao':1,'jie_dian':(1,2),'c':c}]
-
+##print(gan_jian_jv_zhen(3,2,gan_jian_list))
 
 def hou_chu_li(jv_zhen):
     pass
+    
+gan_jian_lib().add()
 
 
 
+
+
+
+
+
+
+
+##############################################################################################################
 def main():
+##    {'I':40000000000,'A':400000,'E':210000,'L':5590,'xu_hao':1,'a':0}
+##    gj=gan_jian(I=40000000000,A=400000,E=210000,L=5590,xu_hao=1,a=0)
+##    t=gj.TT()
+##    k=gj.jv_bu_zuo_biao_xi()
+##    print(t.T,k,t)
+##    print(t.T@k@t)
     pass
+
 if __name__=='__main__':
     main()
 
+
+
+
+##a=np.array([[150.3,0,0,-150.3,0,0],[0,5.771,16.13,0,-5.771,16.13],[0,16.13,60.1,0,-16.13,30.1],[-150.3,0,0,150.3,0,0],[0,-5.771,-16.13,0,5.771,-16.13],[0,16.13,30.1,0,-16.13,60.1]])
+
+##aa=np.zeros((3,3))
