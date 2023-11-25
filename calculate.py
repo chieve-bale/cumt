@@ -151,17 +151,23 @@ def gan_jian_jv_zhen(jie_dian_shu,gan_jian_shu,gan_jian_lib):##输入节点数�
 def hou_chu_li(jv_zhen):
     pass
 
-
+def ji_suan_wei_yi(jv_zhen,force):
+    k_ni=np.linalg.inv(jv_zhen)##求k的逆
+    wei_yi=k_ni@force
+    return wei_yi
+    
 
 
 
 def main():
     gg=gan_jian_lib()
     gg.add(file=1)
-    a=gan_jian_jv_zhen(jie_dian_shu=3,gan_jian_shu=2,gan_jian_lib=gg.table)
-    b=np.array([[0,0,0,50000,30000,20000000,0,0,0]])
-    print(b,'\n',b.T)
-    print(a)
+    k=gan_jian_jv_zhen(jie_dian_shu=3,gan_jian_shu=2,gan_jian_lib=gg.table)
+    
+    f=np.array([[0,0,0,50000,30000,20000000,0,0,0]])
+
+    print(np.linalg.inv(k))
+    print(ji_suan_wei_yi(k,f.T))
 if __name__=='__main__':
     main()
 
