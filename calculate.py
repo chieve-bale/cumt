@@ -49,7 +49,7 @@ class gan_jian:##定义杆件的原始单元刚度矩阵
                 return np.array([[i        ,0         ,0         ,-i      ,0         ,0        ],\
                                  [0        ,12*i/L/L  ,6*i/L     ,0       ,-12*i/L/L ,6*i/L    ],\
                                  [0        ,6*i/L     ,4*i       ,0       ,-6*i/L    ,2*i      ],\
-                                 [-i       ,0         ,0         ,-i      ,0         ,0        ],\
+                                 [-i       ,0         ,0         ,i       ,0         ,0        ],\
                                  [0        ,-12*i/L/L ,-6*i/L    ,0       ,12*i/L/L  ,-6*i/L   ],\
                                  [0        ,6*i/L     ,2*i       ,0       ,-6*i/L    ,4*i      ]])
             case '01':
@@ -122,52 +122,88 @@ class gan_jian_lib:##定义杆件库
         return self.table
         
 ###三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三###
-def gan_jian_jv_zhen(jie_dian_shu,gan_jian_shu,gan_jian_lib):##输入节点数和杆件数
-    jv_zhen=np.zeros((jie_dian_shu*3,jie_dian_shu*3))##创建初始 结构原始刚度矩阵
-    for i in gan_jian_lib:###这段代码繁杂但nb，可以实现杆端编号不连续（例如五号杆件两端节点为3，9），或者两个节点中间有n多个杆
-##        print(i.jie_dian)
-        for x in range(3):
-            for y in range(3):                
-                jv_zhen[i.jie_dian[0]*3+x,i.jie_dian[0]*3+y]=jv_zhen[i.jie_dian[0]*3+x,i.jie_dian[0]*3+y]+i.zheng_ti_zuo_biao_xi()[x,y]
-##                print(i.jie_dian[0]*3+x,i.jie_dian[0]*3+y,x,y)
-        for x in range(3):
-            for y in range(3):
-                jv_zhen[i.jie_dian[0]*3+x,i.jie_dian[1]*3+y]=jv_zhen[i.jie_dian[0]*3+x,i.jie_dian[1]*3+y]+i.zheng_ti_zuo_biao_xi()[x,y+3]
-##                print(i.jie_dian[0]*3+x,i.jie_dian[1]*3+y,x,y+3)
-        for x in range(3):
-            for y in range(3):                
-                jv_zhen[i.jie_dian[1]*3+x,i.jie_dian[0]*3+y]=jv_zhen[i.jie_dian[1]*3+x,i.jie_dian[0]*3+y]+i.zheng_ti_zuo_biao_xi()[x+3,y]
-##                print(i.jie_dian[1]*3+x,i.jie_dian[0]*3+y,x+3,y)
-        for x in range(3):
-            for y in range(3):                
-                jv_zhen[i.jie_dian[1]*3+x,i.jie_dian[1]*3+y]=jv_zhen[i.jie_dian[1]*3+x,i.jie_dian[1]*3+y]+i.zheng_ti_zuo_biao_xi()[x+3,y+3]
-##                print(i.jie_dian[1]*3+x,i.jie_dian[1]*3+y,x+3,y+3)
-##        print(i.zheng_ti_zuo_biao_xi())
-        
-    return jv_zhen##原始刚度矩阵
+
+class application:
+    def __init__(self):
+        pass
+
+    def gan_jian_jv_zhen(self,jie_dian_shu,gan_jian_shu,gan_jian_lib):##输入节点数和杆件数
+        jv_zhen=np.zeros((jie_dian_shu*3,jie_dian_shu*3))##创建初始 结构原始刚度矩阵
+        for i in gan_jian_lib:###这段代码繁杂但nb，可以实现杆端编号不连续（例如五号杆件两端节点为3，9），或者两个节点中间有n多个杆
+    ##        print(i.jie_dian)
+            for x in range(3):
+                for y in range(3):                
+                    jv_zhen[i.jie_dian[0]*3+x,i.jie_dian[0]*3+y]=jv_zhen[i.jie_dian[0]*3+x,i.jie_dian[0]*3+y]+i.zheng_ti_zuo_biao_xi()[x,y]
+    ##                print(i.jie_dian[0]*3+x,i.jie_dian[0]*3+y,x,y)
+            for x in range(3):
+                for y in range(3):
+                    jv_zhen[i.jie_dian[0]*3+x,i.jie_dian[1]*3+y]=jv_zhen[i.jie_dian[0]*3+x,i.jie_dian[1]*3+y]+i.zheng_ti_zuo_biao_xi()[x,y+3]
+    ##                print(i.jie_dian[0]*3+x,i.jie_dian[1]*3+y,x,y+3)
+            for x in range(3):
+                for y in range(3):                
+                    jv_zhen[i.jie_dian[1]*3+x,i.jie_dian[0]*3+y]=jv_zhen[i.jie_dian[1]*3+x,i.jie_dian[0]*3+y]+i.zheng_ti_zuo_biao_xi()[x+3,y]
+    ##                print(i.jie_dian[1]*3+x,i.jie_dian[0]*3+y,x+3,y)
+            for x in range(3):
+                for y in range(3):                
+                    jv_zhen[i.jie_dian[1]*3+x,i.jie_dian[1]*3+y]=jv_zhen[i.jie_dian[1]*3+x,i.jie_dian[1]*3+y]+i.zheng_ti_zuo_biao_xi()[x+3,y+3]
+    ##                print(i.jie_dian[1]*3+x,i.jie_dian[1]*3+y,x+3,y+3)
+    ##        print(i.zheng_ti_zuo_biao_xi())
+            
+        return jv_zhen##原始刚度矩阵
+
+    def hou_chu_li(self,jv_zhen,force,wei_yi) -> list:
+        rows_to_delete=[]
+        cols_to_delete=[]
+        lens=len(wei_yi[0])
+        for x in range(lens):
+            if wei_yi[0][x]==0:
+                rows_to_delete+=[x]
+        for y in range(lens):
+            if wei_yi[0][y]==0:
+                cols_to_delete+=[y]
+    ##    print(rows_to_delete)
+    ##    print(cols_to_delete)
+        jv_zhen=np.delete(jv_zhen,    rows_to_delete,axis=0)
+    ##    print(jv_zhen)
+        jv_zhen=np.delete(jv_zhen,cols_to_delete,axis=1)
+    ##    print(jv_zhen)
+        force=np.delete(force,cols_to_delete,axis=1)
+        return [jv_zhen,force]
+
+    def ji_suan_wei_yi(self,jv_zhen,force):
+        k_ni=np.linalg.inv(jv_zhen)##求k的逆
+        wei_yi=k_ni@force
+        return wei_yi
+
 
 ###四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四###
 
-def hou_chu_li(jv_zhen):
-    pass
-
-def ji_suan_wei_yi(jv_zhen,force):
-    k_ni=np.linalg.inv(jv_zhen)##求k的逆
-    wei_yi=k_ni@force
-    return wei_yi
-    
 
 
+###五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五###            
+
+
+
+###六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六###    
 
 def main():
-    gg=gan_jian_lib()
-    gg.add(file=1)
-    k=gan_jian_jv_zhen(jie_dian_shu=3,gan_jian_shu=2,gan_jian_lib=gg.table)
-    
-    f=np.array([[0,0,0,50000,30000,20000000,0,0,0]])
 
-    print(np.linalg.inv(k))
-    print(ji_suan_wei_yi(k,f.T))
+    app=application()
+    gan=gan_jian_lib()
+    gan.add(file=1)
+    k=app.gan_jian_jv_zhen(jie_dian_shu=3,gan_jian_shu=2,gan_jian_lib=gan.table)
+
+    f=np.array([[0,0,0,50000,30000,20000000,0,0,0]])
+    d=np.array([[0,0,0,1,1,1,0,0,0]])
+    
+    h=app.hou_chu_li(k,f,d)
+    
+    k=h[0]
+    f=h[1]
+
+    resault=app.ji_suan_wei_yi(k,f.T)
+    print(resault)
+
 if __name__=='__main__':
     main()
 
