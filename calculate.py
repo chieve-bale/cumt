@@ -119,26 +119,31 @@ class gan_jian_lib:##定义杆件库
                 self.add_auto()
                 
     def show(self):
-        print(self.table)
         return self.table
         
 ###三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三###
 def gan_jian_jv_zhen(jie_dian_shu,gan_jian_shu,gan_jian_lib):##输入节点数和杆件数
     jv_zhen=np.zeros((jie_dian_shu*3,jie_dian_shu*3))##创建初始 结构原始刚度矩阵
     for i in gan_jian_lib:###这段代码繁杂但nb，可以实现杆端编号不连续（例如五号杆件两端节点为3，9），或者两个节点中间有n多个杆
+##        print(i.jie_dian)
         for x in range(3):
             for y in range(3):                
                 jv_zhen[i.jie_dian[0]*3+x,i.jie_dian[0]*3+y]=jv_zhen[i.jie_dian[0]*3+x,i.jie_dian[0]*3+y]+i.zheng_ti_zuo_biao_xi()[x,y]
+##                print(i.jie_dian[0]*3+x,i.jie_dian[0]*3+y,x,y)
         for x in range(3):
             for y in range(3):
                 jv_zhen[i.jie_dian[0]*3+x,i.jie_dian[1]*3+y]=jv_zhen[i.jie_dian[0]*3+x,i.jie_dian[1]*3+y]+i.zheng_ti_zuo_biao_xi()[x,y+3]
+##                print(i.jie_dian[0]*3+x,i.jie_dian[1]*3+y,x,y+3)
         for x in range(3):
             for y in range(3):                
                 jv_zhen[i.jie_dian[1]*3+x,i.jie_dian[0]*3+y]=jv_zhen[i.jie_dian[1]*3+x,i.jie_dian[0]*3+y]+i.zheng_ti_zuo_biao_xi()[x+3,y]
+##                print(i.jie_dian[1]*3+x,i.jie_dian[0]*3+y,x+3,y)
         for x in range(3):
             for y in range(3):                
                 jv_zhen[i.jie_dian[1]*3+x,i.jie_dian[1]*3+y]=jv_zhen[i.jie_dian[1]*3+x,i.jie_dian[1]*3+y]+i.zheng_ti_zuo_biao_xi()[x+3,y+3]
-        print(i.zheng_ti_zuo_biao_xi())
+##                print(i.jie_dian[1]*3+x,i.jie_dian[1]*3+y,x+3,y+3)
+##        print(i.zheng_ti_zuo_biao_xi())
+        
     return jv_zhen##原始刚度矩阵
 
 ###四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四###
@@ -148,10 +153,14 @@ def hou_chu_li(jv_zhen):
 
 
 
+
+
 def main():
     gg=gan_jian_lib()
     gg.add(file=1)
-    a=gan_jian_jv_zhen(jie_dian_shu=3,gan_jian_shu=2,gan_jian_lib=gg.show())
+    a=gan_jian_jv_zhen(jie_dian_shu=3,gan_jian_shu=2,gan_jian_lib=gg.table)
+    b=np.array([[0,0,0,50000,30000,20000000,0,0,0]])
+    print(b,'\n',b.T)
     print(a)
 if __name__=='__main__':
     main()
