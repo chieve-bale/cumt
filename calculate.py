@@ -4,7 +4,12 @@ import math
 
 ##杆件索引使用杆件的编码不使用节点编码！！！
 
-
+class gan_jian_lib:##定义杆件库
+    
+    def add():
+        while can_shu!="q":
+            can_shu=input("输入杆件参数（q退出输入）：")
+    
 class gan_jian:##定义杆件的原始单元刚度矩阵
     
     def __init__(self,xu_hao=0,jie_dian=(0,0),E=206000,A=1,I=1,L=1,a=0,cos=0,sin=0):##类初始化
@@ -58,6 +63,8 @@ class gan_jian:##定义杆件的原始单元刚度矩阵
 
     def zheng_ti_zuo_biao_xi(self):
         return self.TT().T@self.jv_bu_zuo_biao_xi()@self.TT()
+
+    
 
 
 
