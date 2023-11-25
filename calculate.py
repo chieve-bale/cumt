@@ -65,9 +65,15 @@ class gan_jian:##定义杆件的原始单元刚度矩阵
 class gan_jian_lib:##定义杆件库
     def __init__(self):
         self.table=[]
-    
-    def add(self):
-##        can_shu={'xu_hao':0,'jie_dian':(0,0),'E':206000,'A':1,'I':1,'L':1,'a':0,'cos':0,'sin':0}
+   
+    def add(self,file=0):##往杆件库中添加杆件，默认手动输入，file=1时读取json文件
+        match file:
+            case 0:
+                add_hand()
+            case 1:
+                add_auto()
+
+    def add_hand(self):
         while True:
             can_shu={'xu_hao':0,'jie_dian':(0,0),'E':206000,'A':1,'I':1,'L':1,'a':0,'cos':0,'sin':0}
             can_shu=input("按照字典输入杆件参数{'xu_hao':0,'jie_dian':(0,0),'E':206000,'A':1,'I':1,'L':1,'a':0,'cos':0,'sin':0}（q退出输入）：")
@@ -92,8 +98,18 @@ class gan_jian_lib:##定义杆件库
                              cos=can_shu['cos'],\
                              sin=can_shu['sin'])]
             else:
-                print("输入有误，请重新输入")
+                print("输入有误，请重新输入")  
 
+    def add_auto():
+        try:
+            f=open('./gan_jian_lib.json', mode='r',encoding='utf-8')
+        except:
+            print('杆件库文件（gan_jian_lib.json）异常，请检查')
+        else:
+            json.load(f,ensure_ascii=False, encoding='utf-8')
+    def show(self):
+        print(self.table)
+        return self.table
 
 
     
