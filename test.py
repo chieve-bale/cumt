@@ -10,8 +10,8 @@ force=[{'xu_hao':0,'wei_zhi':[2,2],'lei_xing':'01','F':30000,'a': 0, 'cos': 0, '
          {'xu_hao':2,'wei_zhi':[2,2],'lei_xing':'00','F':50000,'a': 0, 'cos': 0, 'sin': 0}  ]
 
 
-force1=[{'xu_hao':0,'wei_zhi':[0,0],'lei_xing':'00','F':1,'a':0,'cos':0,'sin':0}]
-force2=[{'xu_hao':0,'wei_zhi':[1,2],'lei_xing':'5','chang_du':100,'duan_dian':[10,10],'duan_dian_zhi':[1,1],'a':0,'cos':0,'sin':0}]
+# force1=[{'xu_hao':0,'wei_zhi':[0,0],'lei_xing':'00','F':1,'a':0,'cos':0,'sin':0}]
+# force2=[{'xu_hao':0,'wei_zhi':[1,2],'lei_xing':'5','chang_du':100,'duan_dian':[10,10],'duan_dian_zhi':[1,1],'a':0,'cos':0,'sin':0}]
 
 
 
