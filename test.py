@@ -12,6 +12,11 @@ a=[{'xu_hao': 0, 'jie_dian': [0, 1], 'E': 210000, 'A': 400000, 'I': 40000000000,
 ##    c=json.load(f)
 
     
-print(a)
-with open('gan_jian_lib.json','w',encoding='utf-8') as f:
-    json.dump(a,f,ensure_ascii=False,indent=4)
+##print(a)
+##with open('gan_jian_lib.json','w',encoding='utf-8') as f:
+    ##json.dump(a,f,ensure_ascii=False,indent=4)
+
+
+with open('gan_jian_lib.json','r',encoding='utf-8') as f:
+    c=json.load(f)
+print(c)
