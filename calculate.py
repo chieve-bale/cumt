@@ -1,7 +1,7 @@
 import numpy as np
 import math
 import json
-##单位统一为：长度mm，力N，应力MPa，默认E=206000MPa ，角度默认 °（逆时针为正）。.
+##单位统一为：长度mm，力N，应力MPa，默认E=206000MPa ，角度默认 °（逆时针为正）。.,
 
 ##杆件索引使用杆件的编码不使用节点编码！！！
 
