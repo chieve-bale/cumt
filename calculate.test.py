@@ -177,11 +177,29 @@ class application:
 
 
 ###四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四###
+class force:
 
+    def __init__(self) -> None:
+        force.gan_duan_li
+    def gan_duan_li(self):
+        pass
+    def equal(self):
+        pass
 
 
 ###五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五###            
+class force_lib:
 
+    def __init__(self) -> None:
+        self.table=[]
+    def add(self):
+        pass
+    def add_auto(self):
+        pass
+    def add_hand(self):
+        pass
+    def show(self):
+        return self.table
 
 
 ###六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六###    
