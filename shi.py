@@ -1,10 +1,9 @@
 import numpy as np
-a=np.zeros(10)
+a=np.zeros([10,5])
 a[0]=1
 print(a)
 print(type(a[0:5]))
 i=2
 L={i:2}
 i+=1
-print(i)
-print(i)
+print(len(a))

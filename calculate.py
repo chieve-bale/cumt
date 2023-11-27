@@ -18,7 +18,8 @@ class gan_jian:##定义杆件的原始单元刚度矩阵
         self.E=E              ##弹性模量
         self.A=A              ##截面面积
         self.I=I              ##截面惯性矩
-        self.i=E*A/L          ##杆件线刚度
+        self.i=round(E*I/L,4)          ##杆件线刚度
+        self.EA=round(E*A,4)
         self.L=L              ##杆件长度
         self.a=a              ##杆件角度，顺时针为正
         if cos==0 and sin==0:
@@ -41,25 +42,28 @@ class gan_jian:##定义杆件的原始单元刚度矩阵
     def jv_bu_zuo_biao_xi(self,gg='00'):  ##输入杆件代码,代码为数字字符，输出局部坐标系刚度矩阵。按照课本P227表格顺序
         i=self.i
         L=self.L
+        EA=self.EA
         match gg:
             case '00':
-                return np.array([[i        ,0         ,0         ,-i      ,0         ,0        ],\
+                return np.array([[EA/L     ,0         ,0         ,-EA/L   ,0         ,0        ],\
                                  [0        ,12*i/L/L  ,6*i/L     ,0       ,-12*i/L/L ,6*i/L    ],\
                                  [0        ,6*i/L     ,4*i       ,0       ,-6*i/L    ,2*i      ],\
-                                 [-i       ,0         ,0         ,i       ,0         ,0        ],\
+                                 [-EA/L    ,0         ,0         ,EA/L    ,0         ,0        ],\
                                  [0        ,-12*i/L/L ,-6*i/L    ,0       ,12*i/L/L  ,-6*i/L   ],\
                                  [0        ,6*i/L     ,2*i       ,0       ,-6*i/L    ,4*i      ]])
             case '01':
                 return [[]]
 
     def zheng_ti_zuo_biao_xi(self):
-        return self.TT().T@self.jv_bu_zuo_biao_xi()@self.TT()
+        resault=self.TT().T@self.jv_bu_zuo_biao_xi()@self.TT()
+        # print(self.jv_bu_zuo_biao_xi())
+        return resault
 ###二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二###  
 class gan_jian_lib:##定义杆件库
     def __init__(self):
         self.table=[]
         self.gan_jian_num=0
-        self.jie_dian_num=1
+        self.jie_dian_num=0
     def __add_hand(self):
         while True:
             can_shu={'xu_hao':0,'jie_dian':[0,0],'E':206000,'A':1,'I':1,'L':1,'a':0,'cos':0,'sin':0}
@@ -134,15 +138,15 @@ class force:
         self.sin=sin
         self.jie_gou=jie_gou
         if self.cos==0 and self.sin==0:
-            self.cos=math.cos(a/180*math.pi)
-            self.sin=math.sin(a/180*math.pi)
+            self.cos=round(math.cos(a/180*math.pi),3)
+            self.sin=round(math.sin(a/180*math.pi),3)
         else:
             self.cos=cos
             self.sin=sin
         match self.lei_xing:
-            case '00':self.force={self.wei_zhi[0]:np.array([[self.F*self.cos,self.F*self.sin,0]])}
-            case '01':self.force={self.wei_zhi[0]:np.array([[0,0,0]])}
-            case '02':self.force={self.wei_zhi[0]:np.array([[0,0,self.F]])}
+            case '00':self.force=np.array([[wei_zhi[0],self.F*self.cos,self.F*self.sin,0]])
+            case '01':self.force=np.array([[self.wei_zhi[0],0,0,0]])
+            case '02':self.force=np.array([[self.wei_zhi[0],0,0,self.F]])
             case '10':self.force=pu_tong_deng_xiao('10')
             case '11':self.force=pu_tong_deng_xiao('11')
             case '12':self.force=pu_tong_deng_xiao('12')
@@ -156,19 +160,19 @@ class force:
         c=self.cos
         match code:
             case '10':
-                gu_duan=np.array([[-(b*b*(L+2*a)*F*c/(L*L*L)),-(b*b*(L+2*a)*F*s/(L*L*L)), a*b*b*F/(L*L),\
-                                    (a*a*(L+2*b)*F*s/(L*L*L)), (a*a*(L+2*b)*F*s/(L*L*L)),-a*a*b*F/(L*L)]])
+                gu_duan=np.array([[self.wei_zhi[0],-(b*b*(L+2*a)*F*c/(L*L*L)),-(b*b*(L+2*a)*F*s/(L*L*L)), a*b*b*F/(L*L),\
+                                   self.wei_zhi[0],(a*a*(L+2*b)*F*s/(L*L*L)), (a*a*(L+2*b)*F*s/(L*L*L)),-a*a*b*F/(L*L)]])
             case '11':
                 gu_duan=np.array([[]])
             case '12':
-                gu_duan=np.array([[ 6*a*b*F*c/(L*L*L), 6*a*b*F*c/(L*L*L),-b*(3*a-L)*F/(L*L),\
-                                   -6*a*b*F*s/(L*L*L),-6*a*b*F*s/(L*L*L),-a*(3*B-L)*F/(L*L),]])
-        return {self.wei_zhi[0]:gu_duan[0:2],self.wei_zhi[1]:gu_duan[3:5]}
+                gu_duan=np.array([[self.wei_zhi[0], 6*a*b*F*c/(L*L*L), 6*a*b*F*c/(L*L*L),-b*(3*a-L)*F/(L*L),\
+                                   self.wei_zhi[0],-6*a*b*F*s/(L*L*L),-6*a*b*F*s/(L*L*L),-a*(3*b-L)*F/(L*L),]])
+        return gu_duan
     def jun_bu_deng_xiao(self,code):
         match code:
             case '3':
-                gan_duan=np.array([[]])
-        return {self.wei_zhi[0]:gu_duan[0:2],self.wei_zhi[1]:gu_duan[3:5]}
+                gu_duan=np.array([[]])
+        return gu_duan
 ###四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四###
 class force_lib:
     def __init__(self) -> None:
@@ -190,8 +194,6 @@ class force_lib:
             can_shu_s=json.load(f)
             f.close()
         for can_shu in can_shu_s:
-            self.jie_dian_num+=0
-            print('66')
             self.table+=[force(xu_hao=can_shu['xu_hao'],\
                                wei_zhi=can_shu['wei_zhi'],\
                                lei_xing=can_shu['lei_xing'],\
@@ -240,43 +242,46 @@ class application:
         self.wei_yi_xiang_liang =np.array([[]])
         self.force_xiang_liang  =np.array([[]])
     def zheng_ti_jv_zhen(self,gan_jian_lib):##输入节点数和杆件数
-        print(gan_jian_lib.jie_dian_num,'^')
         jie_dian_num=gan_jian_lib.jie_dian_num
         jv_zhen=np.zeros((jie_dian_num*3,jie_dian_num*3))##创建初始 结构原始刚度矩阵
         ###这段代码繁杂但nb，可以实现杆端编号不连续（例如五号杆件两端节点为3，9），或者两个节点中间有n多个杆
-        for i in gan_jian_lib.table:#i是每个杆件的实例
+        for i in gan_jian_lib.table:#i是每个杆件的实例'
+            print(i.zheng_ti_zuo_biao_xi())
     ##        print(i.jie_dian)
             for x in range(3):
                 for y in range(3):                
-                    jv_zhen[i.jie_dian[0]*3+x,i.jie_dian[0]*3+y]=jv_zhen[i.jie_dian[0]*3+x,i.jie_dian[0]*3+y]+i.zheng_ti_zuo_biao_xi()[x,y]
+                    jv_zhen[i.jie_dian[0]*3+x,i.jie_dian[0]*3+y]=jv_zhen[i.jie_dian[0]*3+x,i.jie_dian[0]*3+y]\
+                        +round(i.zheng_ti_zuo_biao_xi()[x,y],3)
     ##                print(i.jie_dian[0]*3+x,i.jie_dian[0]*3+y,x,y)
             for x in range(3):
                 for y in range(3):
-                    jv_zhen[i.jie_dian[0]*3+x,i.jie_dian[1]*3+y]=jv_zhen[i.jie_dian[0]*3+x,i.jie_dian[1]*3+y]+i.zheng_ti_zuo_biao_xi()[x,y+3]
+                    jv_zhen[i.jie_dian[0]*3+x,i.jie_dian[1]*3+y]=jv_zhen[i.jie_dian[0]*3+x,i.jie_dian[1]*3+y]\
+                        +round(i.zheng_ti_zuo_biao_xi()[x,y+3],3)
     ##                print(i.jie_dian[0]*3+x,i.jie_dian[1]*3+y,x,y+3)
             for x in range(3):
                 for y in range(3):                
-                    jv_zhen[i.jie_dian[1]*3+x,i.jie_dian[0]*3+y]=jv_zhen[i.jie_dian[1]*3+x,i.jie_dian[0]*3+y]+i.zheng_ti_zuo_biao_xi()[x+3,y]
+                    jv_zhen[i.jie_dian[1]*3+x,i.jie_dian[0]*3+y]=jv_zhen[i.jie_dian[1]*3+x,i.jie_dian[0]*3+y]\
+                        +round(i.zheng_ti_zuo_biao_xi()[x+3,y],3)
     ##                print(i.jie_dian[1]*3+x,i.jie_dian[0]*3+y,x+3,y)
             for x in range(3):
                 for y in range(3):                
-                    jv_zhen[i.jie_dian[1]*3+x,i.jie_dian[1]*3+y]=jv_zhen[i.jie_dian[1]*3+x,i.jie_dian[1]*3+y]+i.zheng_ti_zuo_biao_xi()[x+3,y+3]
+                    jv_zhen[i.jie_dian[1]*3+x,i.jie_dian[1]*3+y]=jv_zhen[i.jie_dian[1]*3+x,i.jie_dian[1]*3+y]\
+                        +round(i.zheng_ti_zuo_biao_xi()[x+3,y+3])
     ##                print(i.jie_dian[1]*3+x,i.jie_dian[1]*3+y,x+3,y+3)
     ##        print(i.zheng_ti_zuo_biao_xi())
         self.jv_zhen=jv_zhen     
         return jv_zhen##原始刚度矩阵
     def hand_force(self,force_lib):
         table=force_lib.table
-        jie_dian_num=force_lib.jie_dian_num*3
-        print('处理时侯'jie_dian_num)
-        force_xiang_liang=np.zeros((jie_dian_num))
+        jie_dian_num=3#force_lib.jie_dian_num
+        force_xiang_liang=np.zeros((jie_dian_num*3))
         for i in force_lib.table:#i是每个力的实例
             for x in range(3):
                 if len(i.force)==1:#每个力有两个位置参数
-                    force_xiang_liang[i.wei_zhi[0]*3+x]=force_xiang_liang[i.wei_zhi[0]*3+x]+i.force[0]
+                    force_xiang_liang[i.wei_zhi[0]*3+x]=force_xiang_liang[i.wei_zhi[0]*3+x]+round(i.force[0,x+1],3)
                 elif len(i.force)==2:
-                    force_xiang_liang[i.wei_zhi[0]*3+x]=force_xiang_liang[i.wei_zhi[0]*3+x]+i.force[0]
-                    force_xiang_liang[i.wei_zhi[1]*3+x]=force_xiang_liang[i.wei_zhi[1]*3+x]+i.force[1]
+                    force_xiang_liang[i.wei_zhi[0]*3+x]=force_xiang_liang[i.wei_zhi[0]*3+x]+round(i.force[0,x+1],3)
+                    force_xiang_liang[i.wei_zhi[1]*3+x]=force_xiang_liang[i.wei_zhi[1]*3+x]+round(i.force[1,x+1],3)
         self.force_xiang_liang=force_xiang_liang
         return force_xiang_liang
 
@@ -297,7 +302,7 @@ class application:
     ##    print(jv_zhen)
         jv_zhen=np.delete(jv_zhen,cols_to_delete,axis=1)
     ##    print(jv_zhen)
-        force=np.delete(force,cols_to_delete,axis=1)
+        force=np.delete(force,cols_to_delete,axis=0)
         return [jv_zhen,force]
     def ji_suan_wei_yi(self,jv_zhen,force):
         k_ni=np.linalg.inv(jv_zhen)##求k的逆
@@ -310,23 +315,24 @@ def main():
 
     ganl=gan_jian_lib()
     ganl.add(file=1)
-    print('********')
+
+    k=app.zheng_ti_jv_zhen(ganl) 
+    print(k)   
+
     forl=force_lib()
     forl.add(file=1)
-    print('########')
-    print(3,ganl.jie_dian_num,2,ganl.gan_jian_num)
-    print(3,forl.jie_dian_num)
-    print('&&&&&&&&')
-    k=app.zheng_ti_jv_zhen(ganl)
+
+
     f=app.hand_force(forl)
     # f=np.array([[0,0,0,50000,30000,20000000,0,0,0]])
-
+    print('&&&&&&&&')
     d=np.array([[0,0,0,1,1,1,0,0,0]])
 
     h=app.hou_chu_li(k,f,d)
-    
     k=h[0]
     f=h[1]
+
+    print(f)
 
     resault=app.ji_suan_wei_yi(k,f.T)
     print(resault)
