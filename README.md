@@ -31,8 +31,8 @@
 
 **计算程序读取力的json文件为force.json**。格式如下：（暂定！！类型代码为两位字符串）
 [
-    {'xu_hao':0,'wei_zhi':[0,0],'lei_xing':'00','chang_du':1,'duan_dian':[10,10],'duan_dian_zhi':[1,1],'F':1,'a':0,'cos':0,'sin':0},
+    {'xu_hao':0,'wei_zhi':[0,0],'lei_xing':'00','L':1,'duan_dian':[10,10],'duan_dian_zhi':[1,1],'F':1,'a':0,'cos':0,'sin':0},
     {'xu_hao':0,'wei_zhi':[0,0],'lei_xing':'00','F':1,'a':0,'cos':0,'sin':0},
-    {'xu_hao':0,'wei_zhi':[1,2],'lei_xing':'3','chang_du':100,'duan_dian':[10,10],'duan_dian_zhi':[1,1],'a':0,'cos':0,'sin':0}
+    {'xu_hao':0,'wei_zhi':[1,2],'lei_xing':'3','L':100,'duan_dian':[10,10],'duan_dian_zhi':[1,1],'a':0,'cos':0,'sin':0}
 
 ]

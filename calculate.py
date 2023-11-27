@@ -2,8 +2,8 @@ import numpy as np
 import math
 import json
 
-####force类，两个等效节点荷载转化函数
-####application类，处理力库
+####force类。转化函数中的杆件长度L
+####force类，目前力的角度是整体坐标系下的角度，能否改成局部坐标系下的角度
 
 ##单位统一为：长度mm，力N，应力MPa，默认E=206000MPa ，角度默认 °（逆时针为正）。
 
@@ -59,10 +59,10 @@ class gan_jian_lib:##定义杆件库
     def __init__(self):
         self.table=[]
         self.gan_jian_num=0
-        self.jie_dian_num=0
+        self.jie_dian_num=1
     def __add_hand(self):
         while True:
-            can_shu={'xu_hao':0,'jie_dian':(0,0),'E':206000,'A':1,'I':1,'L':1,'a':0,'cos':0,'sin':0}
+            can_shu={'xu_hao':0,'jie_dian':[0,0],'E':206000,'A':1,'I':1,'L':1,'a':0,'cos':0,'sin':0}
             can_shu=input("按照字典输入杆件参数{'xu_hao':0,'jie_dian':(0,0),'E':206000,'A':1,'I':1,'L':1,'a':0,'cos':0,'sin':0}（q退出输入）：")
             len_can_shu=len(can_shu)
             if can_shu=='q':
@@ -75,15 +75,17 @@ class gan_jian_lib:##定义杆件库
                 break
             elif len(can_shu) > 5:
                 can_shu=eval(can_shu)
+                self.gan_jian_num+=1
+                self.jie_dian_num=max(can_shu['jie_dian'][0],can_shu['jie_dian'][1],self.jie_dian_num)
                 self.table+=[gan_jian(xu_hao=can_shu['xu_hao'],\
-                             jie_dian=can_shu['jie_dian'],\
-                             E=can_shu['E'],\
-                             A=can_shu['A'],\
-                             I=can_shu['I'],\
-                             L=can_shu['L'],\
-                             a=can_shu['a'],\
-                             cos=can_shu['cos'],\
-                             sin=can_shu['sin'])]
+                                      jie_dian=can_shu['jie_dian'],\
+                                      E=can_shu['E'],\
+                                      A=can_shu['A'],\
+                                      I=can_shu['I'],\
+                                      L=can_shu['L'],\
+                                      a=can_shu['a'],\
+                                      cos=can_shu['cos'],\
+                                      sin=can_shu['sin'])]
             else:
                 print("输入有误，请重新输入")  
 
@@ -96,15 +98,17 @@ class gan_jian_lib:##定义杆件库
             can_shu_s=json.load(f)
             f.close()
         for can_shu in can_shu_s:
+            self.gan_jian_num+=1
+            self.jie_dian_num=max(can_shu['jie_dian'][0]+1,can_shu['jie_dian'][1]+1,self.jie_dian_num)
             self.table+=[gan_jian(xu_hao=can_shu['xu_hao'],\
-                         jie_dian=can_shu['jie_dian'],\
-                         E=can_shu['E'],\
-                         A=can_shu['A'],\
-                         I=can_shu['I'],\
-                         L=can_shu['L'],\
-                         a=can_shu['a'],\
-                         cos=can_shu['cos'],\
-                         sin=can_shu['sin'])]
+                                  jie_dian=can_shu['jie_dian'],\
+                                  E=can_shu['E'],\
+                                  A=can_shu['A'],\
+                                  I=can_shu['I'],\
+                                  L=can_shu['L'],\
+                                  a=can_shu['a'],\
+                                  cos=can_shu['cos'],\
+                                  sin=can_shu['sin'])]
    
     def add(self,file=0):##往杆件库中添加杆件，默认手动输入，file=1时读取json文件
         match file:
@@ -117,15 +121,18 @@ class gan_jian_lib:##定义杆件库
         return self.table        
 ###三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三###
 class force:
-    def __init__(self,xu_hao=0,wei_zhi=[0,0],lei_xing='00',chang_du=1,duan_dian=[0,0],duan_dian_zhi=[1,1],F=1,a=0,cos=0,sin=0) -> None:
+    def __init__(self,xu_hao=0,wei_zhi=[0],lei_xing='00',L=1,duan_dian=[0,0],duan_dian_zhi=[1,1],F=1,a=0,cos=0,sin=0,jie_gou=[]) -> None:
         self.xu_hao=xu_hao
         self.wei_zhi=wei_zhi
         self.lei_xing=lei_xing
-        self.chang_du=chang_du
+        self.L=L
         self.duan_dian=duan_dian
-        self.duan_dian_zhi
+        self.duan_dian_zhi=duan_dian_zhi
         self.F=F
         self.a=a
+        self.cos=cos
+        self.sin=sin
+        self.jie_gou=jie_gou
         if self.cos==0 and self.sin==0:
             self.cos=math.cos(a/180*math.pi)
             self.sin=math.sin(a/180*math.pi)
@@ -133,23 +140,41 @@ class force:
             self.cos=cos
             self.sin=sin
         match self.lei_xing:
-            case '00':self.force=[np.array([[self.F*self.sin,self.F*self.cos,0]])]  
-            case '01':self.force=[np.array([[0,0,0]])]
-            case '02':self.force=[np.array([[0,0,self.F]])]
-            case '10':self.force=pu_tong_deng_xiao()
-            case '11':self.force=pu_tong_deng_xiao()
-            case '12':self.force=pu_tong_deng_xiao()
-            case '3' :self.force=jun_bu_deng_xiao()
-    def pu_tong_deng_xiao(self):
-        return [np.array([[]]),np.array([[]])]
-    def jun_bu_deng_xiao(self):
-        return [np.array([[]]),np.array([[]])]
+            case '00':self.force={self.wei_zhi[0]:np.array([[self.F*self.cos,self.F*self.sin,0]])}
+            case '01':self.force={self.wei_zhi[0]:np.array([[0,0,0]])}
+            case '02':self.force={self.wei_zhi[0]:np.array([[0,0,self.F]])}
+            case '10':self.force=pu_tong_deng_xiao('10')
+            case '11':self.force=pu_tong_deng_xiao('11')
+            case '12':self.force=pu_tong_deng_xiao('12')
+            case '3' :self.force=jun_bu_deng_xiao('3')
+    def pu_tong_deng_xiao(self,code):
+        a=self.duan_dian[0]
+        b=self.duan_dian[1]
+        L=self.L
+        F=self.F
+        s=self.sin
+        c=self.cos
+        match code:
+            case '10':
+                gu_duan=np.array([[-(b*b*(L+2*a)*F*c/(L*L*L)),-(b*b*(L+2*a)*F*s/(L*L*L)), a*b*b*F/(L*L),\
+                                    (a*a*(L+2*b)*F*s/(L*L*L)), (a*a*(L+2*b)*F*s/(L*L*L)),-a*a*b*F/(L*L)]])
+            case '11':
+                gu_duan=np.array([[]])
+            case '12':
+                gu_duan=np.array([[ 6*a*b*F*c/(L*L*L), 6*a*b*F*c/(L*L*L),-b*(3*a-L)*F/(L*L),\
+                                   -6*a*b*F*s/(L*L*L),-6*a*b*F*s/(L*L*L),-a*(3*B-L)*F/(L*L),]])
+        return {self.wei_zhi[0]:gu_duan[0:2],self.wei_zhi[1]:gu_duan[3:5]}
+    def jun_bu_deng_xiao(self,code):
+        match code:
+            case '3':
+                gan_duan=np.array([[]])
+        return {self.wei_zhi[0]:gu_duan[0:2],self.wei_zhi[1]:gu_duan[3:5]}
 ###四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四###
 class force_lib:
     def __init__(self) -> None:
         self.table=[]
         self.force_num=0
-        self.jie_dian_num=0
+        self.jie_dian_num=1
     def add(self,file=0):##往力库中添加力，默认手动输入，file=1时读取json文件
         match file:
             case 0:
@@ -165,22 +190,23 @@ class force_lib:
             can_shu_s=json.load(f)
             f.close()
         for can_shu in can_shu_s:
+            self.jie_dian_num+=0
+            print('66')
             self.table+=[force(xu_hao=can_shu['xu_hao'],\
-                                  wei_zhi=can_shu['jie_dian'],\
-                                  lei_xing=can_shu['lei_xing'],\
-                                  chang_du=can_shu['chang_du'],\
-                                  duan_dian=can_shu['duan_dian'],\
-                                  duan_dian_zhi=can_shu['duan_dian_zhi'],\
-                                  F=can_shu['F'],\
-                                  a=can_shu['a'],\
-                                  cos=can_shu['cos'],\
-                                  sin=can_shu['sin'])]
+                               wei_zhi=can_shu['wei_zhi'],\
+                               lei_xing=can_shu['lei_xing'],\
+                               L=can_shu['L'],\
+                               duan_dian=can_shu['duan_dian'],\
+                               duan_dian_zhi=can_shu['duan_dian_zhi'],\
+                               F=can_shu['F'],\
+                               a=can_shu['a'],\
+                               cos=can_shu['cos'],\
+                               sin=can_shu['sin'])]
     def __add_hand(self):
         while True:
             can_shu={'xu_hao':0,'wei_zhi':[0,0],'lei_xing':'00','chang_du':1,'duan_dian':[10,10],'duan_dian_zhi':[1,1],'F':1,'a':0,'cos':0,'sin':0}
             can_shu=input("按照字典输入杆件参数{'xu_hao':0,'wei_zhi':[0,0],'lei_xing':'00','chang_du':1,\
                           'duan_dian':[10,10],'duan_dian_zhi':[1,1],'F':1,'a':0,'cos':0,'sin':0}（q退出输入）：")
-            len_can_shu=len(can_shu)
             if can_shu=='q':
                 break
             elif can_shu=='show':
@@ -192,15 +218,16 @@ class force_lib:
             elif len(can_shu) > 5:
                 can_shu=eval(can_shu)
                 self.table+=[force(xu_hao=can_shu['xu_hao'],\
-                                      wei_zhi=can_shu['jie_dian'],\
-                                      lei_xing=can_shu['lei_xing'],\
-                                      chang_du=can_shu['chang_du'],\
-                                      duan_dian=can_shu['duan_dian'],\
-                                      duan_dian_zhi=can_shu['duan_dian_zhi'],\
-                                      F=can_shu['F'],\
-                                      a=can_shu['a'],\
-                                      cos=can_shu['cos'],\
-                                      sin=can_shu['sin'])]
+                                   wei_zhi=can_shu['wei_zhi'],\
+                                   lei_xing=can_shu['lei_xing'],\
+                                   chang_du=can_shu['chang_du'],\
+                                   duan_dian=can_shu['duan_dian'],\
+                                   duan_dian_zhi=can_shu['duan_dian_zhi'],\
+                                   F=can_shu['F'],\
+                                   a=can_shu['a'],\
+                                   cos=can_shu['cos'],\
+                                   sin=can_shu['sin'])]
+                self.jie_dian_num+=1
             else:
                 print("输入有误，请重新输入")  
     def show(self):
@@ -212,10 +239,12 @@ class application:
         self.jv_zhen=np.array([[]])
         self.wei_yi_xiang_liang =np.array([[]])
         self.force_xiang_liang  =np.array([[]])
-    def zheng_ti_jv_zhen(self,jie_dian_shu,gan_jian_shu,gan_jian_lib):##输入节点数和杆件数
-        jv_zhen=np.zeros((jie_dian_shu*3,jie_dian_shu*3))##创建初始 结构原始刚度矩阵
+    def zheng_ti_jv_zhen(self,gan_jian_lib):##输入节点数和杆件数
+        print(gan_jian_lib.jie_dian_num,'^')
+        jie_dian_num=gan_jian_lib.jie_dian_num
+        jv_zhen=np.zeros((jie_dian_num*3,jie_dian_num*3))##创建初始 结构原始刚度矩阵
         ###这段代码繁杂但nb，可以实现杆端编号不连续（例如五号杆件两端节点为3，9），或者两个节点中间有n多个杆
-        for i in gan_jian_lib:#i是每个杆件的实例
+        for i in gan_jian_lib.table:#i是每个杆件的实例
     ##        print(i.jie_dian)
             for x in range(3):
                 for y in range(3):                
@@ -237,8 +266,11 @@ class application:
         self.jv_zhen=jv_zhen     
         return jv_zhen##原始刚度矩阵
     def hand_force(self,force_lib):
-        force_xiang_liang=np.zeros((force_lib.jie_dian_num*3))
-        for i in force_lib:#i是每个力的实例
+        table=force_lib.table
+        jie_dian_num=force_lib.jie_dian_num*3
+        print('处理时侯'jie_dian_num)
+        force_xiang_liang=np.zeros((jie_dian_num))
+        for i in force_lib.table:#i是每个力的实例
             for x in range(3):
                 if len(i.force)==1:#每个力有两个位置参数
                     force_xiang_liang[i.wei_zhi[0]*3+x]=force_xiang_liang[i.wei_zhi[0]*3+x]+i.force[0]
@@ -275,13 +307,22 @@ class application:
 ###六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六###    
 def main():
     app=application()
-    gan=gan_jian_lib()
-    gan.add(file=1)
-    k=app.zheng_ti_jv_zhen(jie_dian_shu=3,gan_jian_shu=len(gan.table),gan_jian_lib=gan.table)
 
-    f=np.array([[0,0,0,50000,30000,20000000,0,0,0]])
+    ganl=gan_jian_lib()
+    ganl.add(file=1)
+    print('********')
+    forl=force_lib()
+    forl.add(file=1)
+    print('########')
+    print(3,ganl.jie_dian_num,2,ganl.gan_jian_num)
+    print(3,forl.jie_dian_num)
+    print('&&&&&&&&')
+    k=app.zheng_ti_jv_zhen(ganl)
+    f=app.hand_force(forl)
+    # f=np.array([[0,0,0,50000,30000,20000000,0,0,0]])
+
     d=np.array([[0,0,0,1,1,1,0,0,0]])
-    
+
     h=app.hou_chu_li(k,f,d)
     
     k=h[0]
