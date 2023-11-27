@@ -59,7 +59,6 @@ class gan_jian:##定义杆件的原始单元刚度矩阵
 
     def zheng_ti_zuo_biao_xi(self):
         return self.TT().T@self.jv_bu_zuo_biao_xi()@self.TT()
-
 ###二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二###  
 class gan_jian_lib:##定义杆件库
     def __init__(self):
@@ -119,10 +118,9 @@ class gan_jian_lib:##定义杆件库
                 self.add_auto()
                 
     def show(self):
-        return self.table
-        
+        print(self.table)
+        return self.table        
 ###三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三三###
-
 class application:
     def __init__(self):
         pass
@@ -174,16 +172,85 @@ class application:
         k_ni=np.linalg.inv(jv_zhen)##求k的逆
         wei_yi=k_ni@force
         return wei_yi
-
-
 ###四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四###
+class force:
+    def __init__(self,xu_hao=0,wei_zhi=[0,0],lei_xing='00',chang_du=1,duan_dian=[0,0],duan_dian_zhi=[1,1],F=1,a=0,cos=0,sin=0) -> None:
+        force.xu_hao=xu_hao
+        force.wei_zhi=wei_zhi
+        force.lei_xing=lei_xing
+        force.chang_du=chang_du
+        force.duan_dian=duan_dian
+        force.duan_dian_zhi
+        force.F=F
+        force.a=a
+        force.cos=cos
+        force.sin=sin
 
-
-
+    def gan_duan_li(self):
+        pass
+    def equal(self):
+        pass
 ###五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五###            
+class force_lib:
 
-
-
+    def __init__(self) -> None:
+        self.table=[]
+    def add(self,file=0):##往力库中添加力，默认手动输入，file=1时读取json文件
+        match file:
+            case 0:
+                self.add_hand()
+            case 1:
+                self.add_auto()
+    def add_auto(self):
+        try:
+            f=open('./gan_jian_lib.json',mode='r',encoding='utf-8')
+        except:
+            print('杆件库文件（gan_jian_lib.json）异常，请检查')
+        else:
+            can_shu_s=json.load(f)
+            f.close()
+        for can_shu in can_shu_s:
+            self.table+=[gan_jian(xu_hao=can_shu['xu_hao'],\
+                                      wei_zhi=can_shu['jie_dian'],\
+                                      lei_xing=can_shu['lei_xing'],\
+                                      chang_du=can_shu['chang_du'],\
+                                      duan_dian=can_shu['duan_dian'],\
+                                      duan_dian_zhi=can_shu['duan_dian_zhi'],\
+                                      F=can_shu['F'],\
+                                      a=can_shu['a'],\
+                                      cos=can_shu['cos'],\
+                                      sin=can_shu['sin'])]
+    def add_hand(self):
+        while True:
+            can_shu={'xu_hao':0,'wei_zhi':[0,0],'lei_xing':'00','chang_du':1,'duan_dian':[10,10],'duan_dian_zhi':[1,1],'F':1,'a':0,'cos':0,'sin':0}
+            can_shu=input("按照字典输入杆件参数{'xu_hao':0,'wei_zhi':[0,0],'lei_xing':'00','chang_du':1,\
+                          'duan_dian':[10,10],'duan_dian_zhi':[1,1],'F':1,'a':0,'cos':0,'sin':0}（q退出输入）：")
+            len_can_shu=len(can_shu)
+            if can_shu=='q':
+                break
+            elif can_shu=='show':
+                print(self.table)
+            elif can_shu=='ok':
+                print(self.table)
+                return self.table
+                break
+            elif len(can_shu) > 5:
+                can_shu=eval(can_shu)
+                self.table+=[gan_jian(xu_hao=can_shu['xu_hao'],\
+                                      wei_zhi=can_shu['jie_dian'],\
+                                      lei_xing=can_shu['lei_xing'],\
+                                      chang_du=can_shu['chang_du'],\
+                                      duan_dian=can_shu['duan_dian'],\
+                                      duan_dian_zhi=can_shu['duan_dian_zhi'],\
+                                      F=can_shu['F'],\
+                                      a=can_shu['a'],\
+                                      cos=can_shu['cos'],\
+                                      sin=can_shu['sin'])]
+            else:
+                print("输入有误，请重新输入")  
+    def show(self):
+        print(self.table)
+        return self.table
 ###六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六###    
 
 def main():
