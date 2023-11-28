@@ -162,7 +162,7 @@ class force:
             self.sin=sin
         match self.lei_xing:
             case '00':self.force=np.array([[wei_zhi[0],self.F*self.cos,self.F*self.sin,0]])
-            case '01':self.force=np.array([[self.wei_zhi[0],0,0,0]])
+            case '01':self.force=np.array([[self.wei_zhi[0],0,0,self.F]])
             case '10':self.force=self.pu_tong_deng_xiao('10')
             case '11':self.force=self.pu_tong_deng_xiao('11')
             case '3' :self.force=self.jun_bu_deng_xiao('3')
