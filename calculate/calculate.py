@@ -28,7 +28,7 @@ class config:
 ###一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一###  
 class gan_jian:##定义杆件的原始单元刚度矩阵
     
-    def __init__(self,xu_hao=0,jie_dian=[0,0],E=206000,A:=1,I=1,L=1,a=0,cos=0,sin=0):##类初始化
+    def __init__(self,xu_hao=0,jie_dian=[0,0],E=206000,A=1,I=1,L=1,a=0,cos=0,sin=0):##类初始化
         self.xu_hao=xu_hao    ##杆件序号
         self.jie_dian=jie_dian##杆件节点
         self.E=E              ##弹性模量
@@ -129,7 +129,7 @@ class gan_jian_lib:##定义杆件库
                                     L=can_shu['L'],\
                                     a=can_shu.get('a',self.config.gan_jian_a),\
                                     cos=can_shu.get('cos',self.config.gan_jian_cos),\
-                                    sin=can_shu['sin'])]
+                                    sin=can_shu.get('sin',self.config.gan_jian_sin))]
    
     def add(self,file=0):##往杆件库中添加杆件，默认手动输入，file=1时读取json文件
         match file:
@@ -218,9 +218,9 @@ class force_lib:
                                 duan_dian=can_shu['duan_dian'],\
                                 duan_dian_zhi=can_shu['duan_dian_zhi'],\
                                 F=can_shu['F'],\
-                                a=can_shu['a'],\
-                                cos=can_shu['cos'],\
-                                sin=can_shu['sin'])]
+                                a=can_shu.get('a',self.config.force_a),\
+                                cos=can_shu.get('cos',self.config.force_cos),\
+                                sin=can_shu.get('sin',self.config.force_sin))]
     def __add_hand(self):
         while True:
             can_shu={'xu_hao':0,'wei_zhi':[0,0],'lei_xing':'00','chang_du':1,'duan_dian':[10,10],'duan_dian_zhi':[1,1],'F':1,'a':0,'cos':0,'sin':0}
