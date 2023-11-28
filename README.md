@@ -34,3 +34,6 @@
     {'xu_hao':0,'wei_zhi':[0,0],'lei_xing':'00','F':1,'a':0,'cos':0,'sin':0},
     {'xu_hao':0,'wei_zhi':[1,1],'lei_xing':'3','L':100,'duan_dian':[10,10],'duan_dian_zhi':[1,1],'a':0,'cos':0,'sin':0}
 ]
+
+
+有关设置的信息，以json格式储存在config文件内，修改、添加设置必须先读取再添加再写入！！

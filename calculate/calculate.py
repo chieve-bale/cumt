@@ -95,7 +95,7 @@ class gan_jian_lib:##定义杆件库
 
     def __add_auto(self):
         try:
-            f=open('../gan_jian_lib.json',mode='r',encoding='utf-8')
+            f=open('./gan_jian_lib.json',mode='r',encoding='utf-8')
         except:
             print('杆件库文件（gan_jian_lib.json）异常，请检查')
         else:
@@ -161,9 +161,9 @@ class force:
                 print(L)
                 gu_duan=np.array([[self.wei_zhi[0],-(b*b*(L+2*a)*F*c/(L*L*L)),-(b*b*(L+2*a)*F*s/(L*L*L)), a*b*b*F/(L*L),\
                                    self.wei_zhi[0], (a*a*(L+2*b)*F*s/(L*L*L)), (a*a*(L+2*b)*F*s/(L*L*L)),-a*a*b*F/(L*L)]])
+            # case '11':
+            #     gu_duan=np.array([[]])
             case '11':
-                gu_duan=np.array([[]])
-            case '12':
                 gu_duan=np.array([[self.wei_zhi[0], 6*a*b*F*c/(L*L*L), 6*a*b*F*c/(L*L*L),-b*(3*a-L)*F/(L*L),\
                                    self.wei_zhi[0],-6*a*b*F*s/(L*L*L),-6*a*b*F*s/(L*L*L),-a*(3*b-L)*F/(L*L),]])
         return gu_duan
@@ -186,7 +186,7 @@ class force_lib:
                 self.__add_auto()
     def __add_auto(self):
         try:
-            f=open('../force.json',mode='r',encoding='utf-8')
+            f=open('./force.json',mode='r',encoding='utf-8')
         except:
             print('力库文件（force.json）异常，请检查')
         else:
