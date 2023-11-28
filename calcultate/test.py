@@ -47,10 +47,10 @@ force4=[{'xu_hao':0,'wei_zhi':[1,1],'lei_xing':'00','L':0,'duan_dian':[0,0],'dua
 
     
 
-with open('force.json','w',encoding='utf-8') as f:
-    json.dump(force,f,ensure_ascii=False,indent=4)
-with open('gan_jian_lib.json','w',encoding='utf-8') as f:
-    json.dump(gan_jian,f,ensure_ascii=False,indent=4)
+with open('./force.json','w',encoding='utf-8') as f:
+    json.dump(force1,f,ensure_ascii=False,indent=2)
+with open('./gan_jian_lib.json','w',encoding='utf-8') as f:
+    json.dump(gan_jian1,f,ensure_ascii=False,indent=2)
 
 
 # with open('gan_jian_lib.json','r',encoding='utf-8') as f:
