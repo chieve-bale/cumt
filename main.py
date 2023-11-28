@@ -1,18 +1,16 @@
-import calculate
-import numpy as np
+# 这是一个示例 Python 脚本。
 
-def main():
-    gan_jian_lib=calculate.gan_jian_lib()
-    gan_jian_lib.add(file=1)
-    k=calculate.gan_jian_jv_zhen(jie_dian_shu=3,gan_jian_shu=2,gan_jian_lib=gan_jian_lib.table)
-    
-    f=np.array([[0,0,0,50000,30000,20000000,0,0,0]])##力
-    d=np.array([[0,0,0,1,1,1,0,0,0]])##假的位移，用来后处理的
-    
-    h=calculate.hou_chu_li(k,f,d)
-    
-    resault=calculate.ji_suan_wei_yi(h[0],h[1].T)
-    print(resault)
-    
+# 按 Shift+F10 执行或将其替换为您的代码。
+# 按 双击 Shift 在所有地方搜索类、文件、工具窗口、操作和设置。
+
+
+def print_hi(name):
+    # 在下面的代码行中使用断点来调试脚本。
+    print(f'Hi, {name}')  # 按 Ctrl+F8 切换断点。
+
+
+# 按间距中的绿色按钮以运行脚本。
 if __name__ == '__main__':
-    main()
+    print_hi('PyCharm')
+
+# 访问 https://www.jetbrains.com/help/pycharm/ 获取 PyCharm 帮助
