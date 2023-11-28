@@ -2,8 +2,4 @@ import numpy as np
 a=np.zeros([10,5])
 a[0]=1
 print(a)
-print(type(a[0:5]))
-i=2
-L={i:2}
-i+=1
-print(len(a))
+print(a[0,0:2])

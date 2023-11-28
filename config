@@ -8,8 +8,17 @@
     "sin": 0
   },
   "force": {
+    "L": 0,
     "a": 0,
     "cos": 0,
-    "sin": 0
+    "sin": 0,
+    "duan_dian": [
+      0,
+      0
+    ],
+    "duan_dian_zhi": [
+      0,
+      0
+    ]
   }
 }

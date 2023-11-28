@@ -3,8 +3,11 @@ import math
 import json
 
 ####force类。转化函数中的杆件长度L
-####force类，目前力的角度是整体坐标系下的角度，能否改成局部坐标系下的角度
+####force类，目前力的角度是整体坐标系下的角度，能否改成局部坐标系下的角度？？？
 #桁架
+
+##力库数量，杆件库数量
+##结构位移表达向量，用作后处理用
 
 ##单位统一为：长度mm，力N，应力MPa，默认E=206000MPa ，角度默认 °（逆时针为正）。
 
@@ -13,7 +16,6 @@ class config:
     def __init__(self):
         with open('config',mode='r',encoding='utf-8') as f:
             self.config=json.load(f)  
-        print(self.config['gan_jian'])
         self.gan_jian_E=self.config['gan_jian']['E']
         self.gan_jian_A=self.config['gan_jian']['A']
         self.gan_jian_I=self.config['gan_jian']['I']
@@ -23,8 +25,9 @@ class config:
         self.force_a=self.config['force']['a']
         self.force_cos=self.config['force']['cos']
         self.force_sin=self.config['force']['sin']
-
-
+        self.force_L=self.config['force']['L']
+        self.force_duan_dian=self.config['force']['duan_dian']
+        self.force_duan_dian_zhi=self.config['force']['duan_dian_zhi']
 
 ###一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一###  
 class gan_jian:##定义杆件的原始单元刚度矩阵
@@ -35,8 +38,8 @@ class gan_jian:##定义杆件的原始单元刚度矩阵
         self.E=E              ##弹性模量
         self.A=A              ##截面面积
         self.I=I              ##截面惯性矩
-        self.i=round(E*I/L,4)          ##杆件线刚度
-        self.EA=round(E*A,4)
+        self.i=E*I/L          ##杆件线刚度
+        self.EA=E*A
         self.L=L              ##杆件长度
         self.a=a              ##杆件角度，顺时针为正
         if cos==0 and sin==0:
@@ -162,34 +165,37 @@ class force:
             self.cos=cos
             self.sin=sin
         match self.lei_xing:
-            case '00':self.force=np.array([[wei_zhi[0],self.F*self.cos,self.F*self.sin,0]])
-            case '01':self.force=np.array([[self.wei_zhi[0],0,0,self.F]])
+            case '00':self.force=np.array([[self.F*self.cos,self.F*self.sin,0     ]])
+            case '01':self.force=np.array([[0              ,0              ,self.F]])
             case '10':self.force=self.pu_tong_deng_xiao('10')
             case '11':self.force=self.pu_tong_deng_xiao('11')
             case '3' :self.force=self.jun_bu_deng_xiao('3')
     def pu_tong_deng_xiao(self,code):
         a=self.duan_dian[0]
         b=self.duan_dian[1]
-        L=self.L
+        L=a+b
         F=self.F
         s=self.sin
         c=self.cos
         match code:
             case '10':
-                print(L)
-                gu_duan=np.array([[self.wei_zhi[0],-(b*b*(L+2*a)*F*c/(L*L*L)),-(b*b*(L+2*a)*F*s/(L*L*L)), a*b*b*F/(L*L),\
-                                   self.wei_zhi[0], (a*a*(L+2*b)*F*s/(L*L*L)), (a*a*(L+2*b)*F*s/(L*L*L)),-a*a*b*F/(L*L)]])
-            # case '11':
-            #     gu_duan=np.array([[]])
+                gan_duan=np.array([[  (b*b*(L+2*a)*F*c/(L*L*L)),(b*b*(L+2*a)*F*s/(L*L*L)), a*b*b*F/(L*L)],\
+                                    [(a*a*(L+2*b)*F*s/(L*L*L)),(a*a*(L+2*b)*F*s/(L*L*L)),-a*a*b*F/(L*L)]])
             case '11':
-                gu_duan=np.array([[self.wei_zhi[0], 6*a*b*F*c/(L*L*L), 6*a*b*F*c/(L*L*L),-b*(3*a-L)*F/(L*L),\
-                                   self.wei_zhi[0],-6*a*b*F*s/(L*L*L),-6*a*b*F*s/(L*L*L),-a*(3*b-L)*F/(L*L),]])
-        return gu_duan
+                gan_duan=np.array([[   6*a*b*F*c/(L*L*L), 6*a*b*F*c/(L*L*L),-b*(3*a-L)*F/(L*L)],\
+                                    [-6*a*b*F*s/(L*L*L),-6*a*b*F*s/(L*L*L), a*(3*b-L)*F/(L*L),]])
+        return gan_duan
     def jun_bu_deng_xiao(self,code):
+        ##有待完善通用情况下的计算
+        F=self.F
+        L=self.L
+        duan_dian=self.duan_dian
+        duan_dian=self.duan_dian_zhi
         match code:
             case '3':
-                gu_duan=np.array([[]])
-        return gu_duan
+                gan_duan=np.array([[0,F*L/2, F*L*L/12],\
+                                   [0,F*L/2,-F*L*L/12]])
+        return gan_duan
 ###四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四###
 class force_lib:
     def __init__(self,config:dir) -> None:
@@ -212,12 +218,13 @@ class force_lib:
             can_shu_s=json.load(f)
             f.close()
             for can_shu in can_shu_s:
+                self.jie_dian_num=max(self.jie_dian_num,max(can_shu.get('wei_zhi',[0,0])))
                 self.table+=[force(xu_hao=can_shu['xu_hao'],\
                                 wei_zhi=can_shu['wei_zhi'],\
                                 lei_xing=can_shu['lei_xing'],\
-                                L=can_shu['L'],\
-                                duan_dian=can_shu['duan_dian'],\
-                                duan_dian_zhi=can_shu['duan_dian_zhi'],\
+                                L=can_shu.get('L',self.config.force_L),\
+                                duan_dian=can_shu.get('duan_dian',self.config.force_duan_dian),\
+                                duan_dian_zhi=can_shu.get('duan_dian_zhi',self.config.force_duan_dian_zhi),\
                                 F=can_shu['F'],\
                                 a=can_shu.get('a',self.config.force_a),\
                                 cos=can_shu.get('cos',self.config.force_cos),\
@@ -265,7 +272,6 @@ class application:
         jv_zhen=np.zeros((jie_dian_num*3,jie_dian_num*3))##创建初始 结构原始刚度矩阵
         ###这段代码繁杂但nb，可以实现杆端编号不连续（例如五号杆件两端节点为3，9），或者两个节点中间有n多个杆
         for i in gan_jian_lib.table:#i是每个杆件的实例'
-            print(i.zheng_ti_zuo_biao_xi())
     ##        print(i.jie_dian)
             for x in range(3):
                 for y in range(3):                
@@ -291,16 +297,21 @@ class application:
         self.jv_zhen=jv_zhen     
         return jv_zhen##原始刚度矩阵
     def hand_force(self,force_lib):
-        table=force_lib.table
-        jie_dian_num=3#force_lib.jie_dian_num
+        jie_dian_num=4#force_lib.jie_dian_num
         force_xiang_liang=np.zeros((jie_dian_num*3))
         for i in force_lib.table:#i是每个力的实例
+            print('序号',i.xu_hao,i.force)
             for x in range(3):
                 if len(i.force)==1:#每个力有两个位置参数
-                    force_xiang_liang[i.wei_zhi[0]*3+x]=force_xiang_liang[i.wei_zhi[0]*3+x]+round(i.force[0,x+1],3)
+                    ##i.force[0,x] 索引第0行第x列的值
+                    print(i.wei_zhi[0],i.wei_zhi[1]*3)
+                    print(force_xiang_liang)
+                    print([i.wei_zhi[0]*3+x])
+                    force_xiang_liang[i.wei_zhi[0]*3+x]=force_xiang_liang[i.wei_zhi[0]*3+x]+round(i.force[0,x],3)
                 elif len(i.force)==2:
-                    force_xiang_liang[i.wei_zhi[0]*3+x]=force_xiang_liang[i.wei_zhi[0]*3+x]+round(i.force[0,x+1],3)
-                    force_xiang_liang[i.wei_zhi[1]*3+x]=force_xiang_liang[i.wei_zhi[1]*3+x]+round(i.force[1,x+1],3)
+                    force_xiang_liang[i.wei_zhi[0]*3+x]=force_xiang_liang[i.wei_zhi[0]*3+x]+round(i.force[0,x],3)
+                    force_xiang_liang[i.wei_zhi[1]*3+x]=force_xiang_liang[i.wei_zhi[1]*3+x]+round(i.force[1,x],3)
+            # print(i.xu_hao,'完成',force_xiang_liang)
         self.force_xiang_liang=force_xiang_liang
         return force_xiang_liang
 
@@ -343,15 +354,18 @@ def main():
 
 
     f=app.hand_force(forl)
+    print('原始f：',f)
     # f=np.array([[0,0,0,50000,30000,20000000,0,0,0]])
-    print('&&&&&&&&')
-    d=np.array([[0,0,0,1,1,1,0,0,0]])
+    print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+    d=np.array([[0,0,0,0,0,1,0,0,1,0,0,1]])
 
     h=app.hou_chu_li(k,f,d)
     k=h[0]
     f=h[1]
 
-    print(f)
+    print('后处理f：',f)
+    print('后处理k：',k/100000)
+
 
     resault=app.ji_suan_wei_yi(k,f.T)
     print(resault)
