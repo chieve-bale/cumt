@@ -8,11 +8,27 @@ import json
 ##单位统一为：长度mm，力N，应力MPa，默认E=206000MPa ，角度默认 °（逆时针为正）。
 
 ##杆件索引使用杆件的编码不使用节点编码！！！
+class config:
+    def __init__(self):
+        with open('config',mode='r',encoding='utf-8') as f:
+            self.config=json.load(f)  
+        print(self.config['gan_jian'])
+        self.gan_jian_E=self.config['gan_jian']['E']
+        self.gan_jian_A=self.config['gan_jian']['A']
+        self.gan_jian_I=self.config['gan_jian']['I']
+        self.gan_jian_a=self.config['gan_jian']['a']
+        self.gan_jian_cos=self.config['gan_jian']['cos']
+        self.gan_jian_sin=self.config['gan_jian']['sin']
+        self.force_a=self.config['force']['a']
+        self.force_cos=self.config['force']['cos']
+        self.force_sin=self.config['force']['sin']
+
+
 
 ###一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一###  
 class gan_jian:##定义杆件的原始单元刚度矩阵
     
-    def __init__(self,xu_hao=0,jie_dian=(0,0),E=206000,A=1,I=1,L=1,a=0,cos=0,sin=0):##类初始化
+    def __init__(self,xu_hao=0,jie_dian=[0,0],E=206000,A:=1,I=1,L=1,a=0,cos=0,sin=0):##类初始化
         self.xu_hao=xu_hao    ##杆件序号
         self.jie_dian=jie_dian##杆件节点
         self.E=E              ##弹性模量
@@ -60,7 +76,8 @@ class gan_jian:##定义杆件的原始单元刚度矩阵
         return resault
 ###二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二###  
 class gan_jian_lib:##定义杆件库
-    def __init__(self):
+    def __init__(self,config:dir):
+        self.config=config
         self.table=[]
         self.gan_jian_num=0
         self.jie_dian_num=0
@@ -106,12 +123,12 @@ class gan_jian_lib:##定义杆件库
                 self.jie_dian_num=max(can_shu['jie_dian'][0]+1,can_shu['jie_dian'][1]+1,self.jie_dian_num)
                 self.table+=[gan_jian(xu_hao=can_shu['xu_hao'],\
                                     jie_dian=can_shu['jie_dian'],\
-                                    E=can_shu['E'],\
-                                    A=can_shu['A'],\
-                                    I=can_shu['I'],\
+                                    E=can_shu.get('E',self.config.gan_jian_E),\
+                                    A=can_shu.get('A',self.config.gan_jian_A),\
+                                    I=can_shu.get('I',self.config.gan_jian_I),\
                                     L=can_shu['L'],\
-                                    a=can_shu['a'],\
-                                    cos=can_shu['cos'],\
+                                    a=can_shu.get('a',self.config.gan_jian_a),\
+                                    cos=can_shu.get('cos',self.config.gan_jian_cos),\
                                     sin=can_shu['sin'])]
    
     def add(self,file=0):##往杆件库中添加杆件，默认手动输入，file=1时读取json文件
@@ -174,7 +191,8 @@ class force:
         return gu_duan
 ###四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四四###
 class force_lib:
-    def __init__(self) -> None:
+    def __init__(self,config:dir) -> None:
+        self.config=config
         self.table=[]
         self.force_num=0
         self.jie_dian_num=1
@@ -225,9 +243,9 @@ class force_lib:
                                    duan_dian=can_shu['duan_dian'],\
                                    duan_dian_zhi=can_shu['duan_dian_zhi'],\
                                    F=can_shu['F'],\
-                                   a=can_shu['a'],\
-                                   cos=can_shu['cos'],\
-                                   sin=can_shu['sin'])]
+                                   a=can_shu.get('a',self.config.force_a),\
+                                   cos=can_shu.get('cos',self.config.force_cos),\
+                                   sin=can_shu.get('sin',self.config.force_sin))]
                 self.jie_dian_num+=1
             else:
                 print("输入有误，请重新输入")  
@@ -236,7 +254,8 @@ class force_lib:
         return self.table
 ###五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五五###            
 class application:
-    def __init__(self):##结果初始化
+    def __init__(self,config:dir):##结果初始化
+        self.config=config
         self.jv_zhen=np.array([[]])
         self.wei_yi_xiang_liang =np.array([[]])
         self.force_xiang_liang  =np.array([[]])
@@ -310,15 +329,15 @@ class application:
         return wei_yi
 ###六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六六###    
 def main():
-    app=application()
-
-    ganl=gan_jian_lib()
+    conf=config()
+    app=application(config=conf)
+    ganl=gan_jian_lib(config=conf)
     ganl.add(file=1)
 
     k=app.zheng_ti_jv_zhen(ganl) 
     print(k)   
 
-    forl=force_lib()
+    forl=force_lib(config=conf)
     forl.add(file=1)
 
 
