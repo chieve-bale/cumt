@@ -95,24 +95,24 @@ class gan_jian_lib:##定义杆件库
 
     def __add_auto(self):
         try:
-            f=open('./gan_jian_lib.json',mode='r',encoding='utf-8')
+            f=open('../gan_jian_lib.json',mode='r',encoding='utf-8')
         except:
             print('杆件库文件（gan_jian_lib.json）异常，请检查')
         else:
             can_shu_s=json.load(f)
             f.close()
-        for can_shu in can_shu_s:
-            self.gan_jian_num+=1
-            self.jie_dian_num=max(can_shu['jie_dian'][0]+1,can_shu['jie_dian'][1]+1,self.jie_dian_num)
-            self.table+=[gan_jian(xu_hao=can_shu['xu_hao'],\
-                                  jie_dian=can_shu['jie_dian'],\
-                                  E=can_shu['E'],\
-                                  A=can_shu['A'],\
-                                  I=can_shu['I'],\
-                                  L=can_shu['L'],\
-                                  a=can_shu['a'],\
-                                  cos=can_shu['cos'],\
-                                  sin=can_shu['sin'])]
+            for can_shu in can_shu_s:
+                self.gan_jian_num+=1
+                self.jie_dian_num=max(can_shu['jie_dian'][0]+1,can_shu['jie_dian'][1]+1,self.jie_dian_num)
+                self.table+=[gan_jian(xu_hao=can_shu['xu_hao'],\
+                                    jie_dian=can_shu['jie_dian'],\
+                                    E=can_shu['E'],\
+                                    A=can_shu['A'],\
+                                    I=can_shu['I'],\
+                                    L=can_shu['L'],\
+                                    a=can_shu['a'],\
+                                    cos=can_shu['cos'],\
+                                    sin=can_shu['sin'])]
    
     def add(self,file=0):##往杆件库中添加杆件，默认手动输入，file=1时读取json文件
         match file:
@@ -146,11 +146,9 @@ class force:
         match self.lei_xing:
             case '00':self.force=np.array([[wei_zhi[0],self.F*self.cos,self.F*self.sin,0]])
             case '01':self.force=np.array([[self.wei_zhi[0],0,0,0]])
-            case '02':self.force=np.array([[self.wei_zhi[0],0,0,self.F]])
-            case '10':self.force=pu_tong_deng_xiao('10')
-            case '11':self.force=pu_tong_deng_xiao('11')
-            case '12':self.force=pu_tong_deng_xiao('12')
-            case '3' :self.force=jun_bu_deng_xiao('3')
+            case '10':self.force=self.pu_tong_deng_xiao('10')
+            case '11':self.force=self.pu_tong_deng_xiao('11')
+            case '3' :self.force=self.jun_bu_deng_xiao('3')
     def pu_tong_deng_xiao(self,code):
         a=self.duan_dian[0]
         b=self.duan_dian[1]
@@ -160,8 +158,9 @@ class force:
         c=self.cos
         match code:
             case '10':
+                print(L)
                 gu_duan=np.array([[self.wei_zhi[0],-(b*b*(L+2*a)*F*c/(L*L*L)),-(b*b*(L+2*a)*F*s/(L*L*L)), a*b*b*F/(L*L),\
-                                   self.wei_zhi[0],(a*a*(L+2*b)*F*s/(L*L*L)), (a*a*(L+2*b)*F*s/(L*L*L)),-a*a*b*F/(L*L)]])
+                                   self.wei_zhi[0], (a*a*(L+2*b)*F*s/(L*L*L)), (a*a*(L+2*b)*F*s/(L*L*L)),-a*a*b*F/(L*L)]])
             case '11':
                 gu_duan=np.array([[]])
             case '12':
@@ -187,23 +186,23 @@ class force_lib:
                 self.__add_auto()
     def __add_auto(self):
         try:
-            f=open('./force.json',mode='r',encoding='utf-8')
+            f=open('../force.json',mode='r',encoding='utf-8')
         except:
             print('力库文件（force.json）异常，请检查')
         else:
             can_shu_s=json.load(f)
             f.close()
-        for can_shu in can_shu_s:
-            self.table+=[force(xu_hao=can_shu['xu_hao'],\
-                               wei_zhi=can_shu['wei_zhi'],\
-                               lei_xing=can_shu['lei_xing'],\
-                               L=can_shu['L'],\
-                               duan_dian=can_shu['duan_dian'],\
-                               duan_dian_zhi=can_shu['duan_dian_zhi'],\
-                               F=can_shu['F'],\
-                               a=can_shu['a'],\
-                               cos=can_shu['cos'],\
-                               sin=can_shu['sin'])]
+            for can_shu in can_shu_s:
+                self.table+=[force(xu_hao=can_shu['xu_hao'],\
+                                wei_zhi=can_shu['wei_zhi'],\
+                                lei_xing=can_shu['lei_xing'],\
+                                L=can_shu['L'],\
+                                duan_dian=can_shu['duan_dian'],\
+                                duan_dian_zhi=can_shu['duan_dian_zhi'],\
+                                F=can_shu['F'],\
+                                a=can_shu['a'],\
+                                cos=can_shu['cos'],\
+                                sin=can_shu['sin'])]
     def __add_hand(self):
         while True:
             can_shu={'xu_hao':0,'wei_zhi':[0,0],'lei_xing':'00','chang_du':1,'duan_dian':[10,10],'duan_dian_zhi':[1,1],'F':1,'a':0,'cos':0,'sin':0}
