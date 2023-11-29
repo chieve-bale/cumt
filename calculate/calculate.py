@@ -59,7 +59,6 @@ def main():
     forl.add(file=1)
     print('杆件数',ganl.gan_jian_num)
     print('节点数',ganl.jie_dian_num)
-    print('节点数',forl.jie_dian_num)
 
     f=app.hand_force(forl)
     print('原始f',f)

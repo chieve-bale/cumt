@@ -9,13 +9,14 @@ class force_lib:
         self.config=config
         self.table=[]
         self.force_num=0
-        self.jie_dian_num=0
     def add(self,file=0):##往力库中添加力，默认手动输入，file=1时读取json文件
         match file:
             case 0:
                 self.__add_hand()
             case 1:
                 self.__add_auto()
+    def __add_hand(self):
+        pass
     def __add_auto(self):
         try:
             f=open('./force.json',mode='r',encoding='utf-8')
@@ -25,7 +26,6 @@ class force_lib:
             can_shu_s=json.load(f)
             f.close()
             for can_shu in can_shu_s:
-                self.jie_dian_num=max(self.jie_dian_num,max(can_shu.get('wei_zhi',[0,0]))+1)
                 ff=force(xu_hao=can_shu['xu_hao'],\
                                 wei_zhi=can_shu['wei_zhi'],\
                                 lei_xing=can_shu['lei_xing'],\

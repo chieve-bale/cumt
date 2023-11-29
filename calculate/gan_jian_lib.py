@@ -10,7 +10,8 @@ class gan_jian_lib:##定义杆件库
         self.table=[]
         self.gan_jian_num=0
         self.jie_dian_num=0
-
+    def __add_hand(self):
+        pass
     def __add_auto(self):
         try:
             f=open('./gan_jian_lib.json',mode='r',encoding='utf-8')
