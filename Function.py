@@ -8,7 +8,13 @@ class Zhuye(QMainWindow,Ui_MainWindow):
         super(Zhuye, self).__init__()
         self.setupUi(self)
         self.retranslateUi(self)
+        self.actionNew.triggered.connect(self.new_file)
+    def new_file(self):
+        with open('set_up',mode='w',encoding='utf-8') as f:
+            f.write('hello world')
 
+def main():
+    zhuye=Zhuye(QMainWindow,Ui_MainWindow)
 
 
 if __name__=='__main__':
