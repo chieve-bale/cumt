@@ -1,9 +1,9 @@
 import numpy as np
 import math
 import json
-
+##需要对均布力积分求杆端等效节点荷载
 class force:
-    def __init__(self,xu_hao=0,wei_zhi=[0],lei_xing='00',L=1,duan_dian=[0,0],duan_dian_zhi=[1,1],F=1,a=0,cos=0,sin=0,jie_gou=[]) -> None:
+    def __init__(self,xu_hao=0,wei_zhi=[0],lei_xing='00',L=1,duan_dian=[0,0],duan_dian_zhi=[1,1],F=1,a=0,cos=0,sin=0) -> None:
         self.xu_hao=xu_hao
         self.wei_zhi=wei_zhi
         self.lei_xing=lei_xing
@@ -14,7 +14,6 @@ class force:
         self.a=a
         self.cos=cos
         self.sin=sin
-        self.jie_gou=jie_gou
         if self.cos==0 and self.sin==0:
             self.cos=round(math.cos(a/180*math.pi),3)
             self.sin=round(math.sin(a/180*math.pi),3)
@@ -36,8 +35,8 @@ class force:
         c=self.cos
         match code:
             case '10':
-                gan_duan=np.array([[  (b*b*(L+2*a)*F*c/(L*L*L)),(b*b*(L+2*a)*F*s/(L*L*L)), a*b*b*F/(L*L)],\
-                                    [(a*a*(L+2*b)*F*s/(L*L*L)),(a*a*(L+2*b)*F*s/(L*L*L)),-a*a*b*F/(L*L)]])
+                 gan_duan=np.array([[  (b*b*(L+2*a)*F*c/(L*L*L)),(b*b*(L+2*a)*F*s/(L*L*L)), a*b*b*F/(L*L)],\
+                                     [(a*a*(L+2*b)*F*s/(L*L*L)),(a*a*(L+2*b)*F*s/(L*L*L)),-a*a*b*F/(L*L)]])
             case '11':
                 gan_duan=np.array([[   6*a*b*F*c/(L*L*L), 6*a*b*F*c/(L*L*L),-b*(3*a-L)*F/(L*L)],\
                                     [-6*a*b*F*s/(L*L*L),-6*a*b*F*s/(L*L*L), a*(3*b-L)*F/(L*L),]])

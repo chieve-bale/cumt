@@ -21,19 +21,24 @@ force2=[{'xu_hao':0,'wei_zhi':[0,1],'lei_xing':'10','L':0,'duan_dian':[2000,2000
        {'xu_hao':2,'wei_zhi':[1,1],'lei_xing':'02','L':0,'duan_dian':[0,0],'duan_dian_zhi':[-8000000,-8000000],'F':-8000000,'a': 0, 'cos': 0, 'sin': 0}]
 
 
-gan_jian3=[{'xu_hao': 0, 'jie_dian': [0, 1], 'E': 210000, 'A': 400000, 'I': 40000000000, 'L': 5000, 'a': 0, 'cos': 0, 'sin': 0},\
-   {'xu_hao': 1, 'jie_dian': [1, 2], 'E': 210000, 'A': 400000, 'I': 40000000000, 'L': 5590, 'a': 0, 'cos': 0.447, 'sin': -0.895}]
-force3=[{'xu_hao':0,'wei_zhi':[1,1],'lei_xing':'00','L':0,'duan_dian':[0,0],'duan_dian_zhi':[30000,0],'F':30000,'a': 90, 'cos': 0, 'sin': 0},\
-       {'xu_hao':1,'wei_zhi':[1,1],'lei_xing':'02','L':0,'duan_dian':[0,0],'duan_dian_zhi':[30000,0],'F':20000000,'a': 0, 'cos': 0, 'sin': 0},\
-       {'xu_hao':2,'wei_zhi':[1,1],'lei_xing':'00','L':0,'duan_dian':[0,0],'duan_dian_zhi':[30000,0],'F':50000,'a': 0, 'cos': 0, 'sin': 0}]
+gan_jian38=[{'xu_hao': 0, 'jie_dian': [0, 1], 'E': 210000, 'A': 1, 'I': 4, 'L': 4000, 'a': 90},\
+              {'xu_hao': 1, 'jie_dian': [1, 2], 'E': 210000, 'A': 1, 'I': 4, 'L': 4000},\
+              {'xu_hao': 2, 'jie_dian': [2, 3], 'E':7500000,'A': 1, 'I': 4,'L': 4000}]
+
+force38=[{'xu_hao':0,'wei_zhi':[0,1],'lei_xing':'10','duan_dian':[2000,2000],'F':15000},\
+       {'xu_hao':1,'wei_zhi':[1,1],'lei_xing':'00','F':10000},\
+       {'xu_hao':2,'wei_zhi':[1,1],'lei_xing':'01','F':-8000000},\
+       {'xu_hao':3,'wei_zhi':[1,2],'lei_xing':'3','L':4000,'duan_dian':[0,0],'duan_dian_zhi':[-8,-8],'F':-8},\
+       {'xu_hao':4,'wei_zhi':[2,2],'lei_xing':'00','F':-16000,'a': 90},\
+       {'xu_hao':5,'wei_zhi':[2,3],'lei_xing':'3','L':4000,'duan_dian':[0,0],'duan_dian_zhi':[-8,-8],'F':-8}]
 
 
-gan_jian35=[{'xu_hao': 0, 'jie_dian': [0, 1], 'L': 6000},\
-              {'xu_hao': 1, 'jie_dian': [1, 2], 'L': 8000},\
-              {'xu_hao': 3, 'jie_dian': [2, 3], 'L': 6000}]
+gan_jian35=[{'xu_hao': 0, 'jie_dian': [0, 1], 'E':7500000,'L': 6000},\
+              {'xu_hao': 1, 'jie_dian': [1, 2], 'E':15000000,'L': 8000},\
+              {'xu_hao': 2, 'jie_dian': [2, 3], 'E':10000000,'L': 6000}]
 force35=[{'xu_hao':0,'wei_zhi':[0,1],'lei_xing':'3','L':6000,'duan_dian':[0,0],'duan_dian_zhi':[-10,-10],'F':-10},\
        {'xu_hao':1,'wei_zhi':[1,1],'lei_xing':'01','F':-60000000},\
-       {'xu_hao':2,'wei_zhi':[1,2],'lei_xing':'11','duan_dian':[4000,4000],'F':-20000},\
+       {'xu_hao':2,'wei_zhi':[1,2],'lei_xing':'10','duan_dian':[4000,4000],'F':-20000,'a':90},\
        {'xu_hao':3,'wei_zhi':[2,2],'lei_xing':'01','F':50000000},\
        {'xu_hao':4,'wei_zhi':[3,3],'lei_xing':'01','F':30000000}]
 
@@ -56,9 +61,9 @@ force31=[{'xu_hao':0,'wei_zhi':[1,1],'lei_xing':'00','F':30000,'a': 90},\
     
 
 with open('./force.json','w',encoding='utf-8') as f:
-    json.dump(force31,f,ensure_ascii=False,indent=2)
+    json.dump(force38,f,ensure_ascii=False,indent=2)
 with open('./gan_jian_lib.json','w',encoding='utf-8') as f:
-    json.dump(gan_jian31,f,ensure_ascii=False,indent=2)
+    json.dump(gan_jian38,f,ensure_ascii=False,indent=2)
 
 
 # with open('gan_jian_lib.json','r',encoding='utf-8') as f:

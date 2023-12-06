@@ -10,7 +10,7 @@ from application import application
 
 
 ####force类。转化函数中的杆件长度L
-####force类，目前力的角度是整体坐标系下的角度，能否改成局部坐标系下的角度？？？
+####force类，目前力的角度是整体坐标系下的角度，能否改成局部坐标系下的角度？？？？
 #桁架
 
 ##结构位移表达向量，用作后处理用
@@ -26,14 +26,17 @@ class config:
         self.gan_jian_A=self.config['gan_jian']['A']
         self.gan_jian_I=self.config['gan_jian']['I']
         self.gan_jian_a=self.config['gan_jian']['a']
+        self.gan_jian_L=self.config['gan_jian']['L']
         self.gan_jian_cos=self.config['gan_jian']['cos']
         self.gan_jian_sin=self.config['gan_jian']['sin']
+        self.gan_jian_lian_jie=self.config['gan_jian']['lian_jie']
         self.force_a=self.config['force']['a']
         self.force_cos=self.config['force']['cos']
         self.force_sin=self.config['force']['sin']
         self.force_L=self.config['force']['L']
         self.force_duan_dian=self.config['force']['duan_dian']
         self.force_duan_dian_zhi=self.config['force']['duan_dian_zhi']
+
 
 ###一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一###  
 
@@ -51,31 +54,32 @@ def main():
     app=application(config=conf)
     ganl=gan_jian_lib(config=conf)
     ganl.add(file=1)
-
+    ganl.tong_ji()
     k=app.zheng_ti_jv_zhen(ganl) 
     print('原始整体刚度矩阵','\n',k)   
 
     forl=force_lib(config=conf)
     forl.add(file=1)
-    print('杆件数',ganl.gan_jian_num)
-    print('节点数',ganl.jie_dian_num)
+    print('杆件数','\n',ganl.gan_jian_num)
+    print('节点数','\n',ganl.jie_dian_num)
 
     f=app.hand_force(forl)
-    print('原始f',f)
+    print('原始f','\n',f)
     # f=np.array([[0,0,0,50000,30000,20000000,0,0,0]])
     print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
-    d=np.array([[0,0,0,1,1,1,0,0,0,]])
+    d31=np.array([[0,0,0,1,1,1,0,0,0,]])
+    d35=np.array([[0,0,0,0,0,1,0,0,1,0,0,1]])
+    d38=np.array([[0,0,0,1,1,1,1,1,1,0,0,0]])
 
-    h=app.hou_chu_li(k,f,d)
-    k=h[0]
-    f=h[1]
+    h=app.hou_chu_li(d31)
+    hk=h[0]
+    hf=h[1]
 
-    print('后处理f：',f)
-    print('后处理k：',k/100000)
+    print('后处理f','\n',hf)
+    print('后处理k','\n',hk/100000)
 
-
-    resault=app.ji_suan_wei_yi(k,f.T)
-    print(resault)
+    resault=app.ji_suan_wei_yi()
+    print('结果\n',resault)
 
 if __name__=='__main__':
     main()
