@@ -60,8 +60,6 @@ def main():
 
     forl=force_lib(config=conf)
     forl.add(file=1)
-    print('杆件数','\n',ganl.gan_jian_num)
-    print('节点数','\n',ganl.jie_dian_num)
 
     f=app.hand_force(forl)
     print('原始f','\n',f)

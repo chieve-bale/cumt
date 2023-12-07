@@ -46,15 +46,29 @@ class gan_jian_lib:##定义杆件库
         for j_d in range(self.jie_dian_num):###统计
             ##杆端位移数,不存在为0，独立（连接两边位移不相等，即变形不连续）为1，非独立（连接两边位移相等，即变形连续）为2
             #[[x轴位移1,y轴位移1,转角1,标记是否计数1],[x轴位移2,y轴位移2,转角2，标记是否计数2]]
+            jie_dian_wei_yi_num=[1,1,1]
             for gan in self.table:
                 if gan.jie_dian[0]==j_d:
-                    self.wei_yi_mu_ban+=[[x+y for x, y in zip([1,1,1],gan.wei_yi_num[0][0:3])]]##处理位移模板
+                    jie_dian_wei_yi_num=[x+y for x, y in zip(jie_dian_wei_yi_num,gan.wei_yi_num[0][0:3])]##处理位移模板
                     gan.wei_yi_num[0][3]+=1##标记为已计数
-                if gan.jie_dian[1]==j_d:
-                    self.wei_yi_mu_ban+=[[x+y for x, y in zip([1,1,1],gan.wei_yi_num[1][0:3])]]##处理位移模板
+                if gan.jie_dian[1]==j_d:                
+                    jie_dian_wei_yi_num=[x+y for x, y in zip(jie_dian_wei_yi_num,gan.wei_yi_num[1][0:3])]##处理位移模板
                     gan.wei_yi_num[1][3]+=1##标记为已计数
-                print(self.wei_yi_mu_ban)                    
-        self.wei_yi_num=np.sum(np.array(self.wei_yi_mu_ban))
+            jie_dian_wei_yi_num=[i-1 if i>1 else i for i in jie_dian_wei_yi_num]##和下面两行等价
+            # for i in range(len(jie_dian_wei_yi_num)):##n个杆只引入n-1个新的独立位移
+            #     if jie_dian_wei_yi_num[i]>1:jie_dian_wei_yi_num[i]=jie_dian_wei_yi_num[i]-1
+            self.wei_yi_mu_ban+=[jie_dian_wei_yi_num]##组合 
+        ##统计位移数
+        for i in self.wei_yi_mu_ban:
+            for j in i:
+                match j:
+                    case 0|1:self.wei_yi_num+=1
+                    case x if x>1:self.wei_yi_num+=x
+
+        print('杆件数',self.gan_jian_num)
+        print('节点数',self.jie_dian_num)
+        print('位移数',self.wei_yi_num)
+        print('位移模板',self.wei_yi_mu_ban)
 
              
     def show(self):

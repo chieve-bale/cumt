@@ -17,8 +17,6 @@ class application:
         self.wei_yi_num:int
     def zheng_ti_jv_zhen(self,gan_jian_lib):##输入节点数和杆件数
         self.jie_dian_num=gan_jian_lib.jie_dian_num
-        # jv_zhen=np.zeros((self.jie_dian_num*3,self.jie_dian_num*3))##创建初始 结构原始刚度矩阵
-        # self.wei_yi_xiang_liang_mu_ban=[]##位移向量的模板
         self.wei_yi_num=gan_jian_lib.wei_yi_num
         jv_zhen=np.zeros((self.wei_yi_num,self.wei_yi_num))##创建初始 结构原始刚度矩阵
         ###这段代码繁杂但nb，可以实现杆端编号不连续（例如五号杆件两端节点为3，9），或者两个节点中间有n多个杆

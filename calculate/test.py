@@ -21,9 +21,9 @@ force2=[{'xu_hao':0,'wei_zhi':[0,1],'lei_xing':'10','L':0,'duan_dian':[2000,2000
        {'xu_hao':2,'wei_zhi':[1,1],'lei_xing':'02','L':0,'duan_dian':[0,0],'duan_dian_zhi':[-8000000,-8000000],'F':-8000000,'a': 0, 'cos': 0, 'sin': 0}]
 
 
-gan_jian38=[{'xu_hao': 0, 'jie_dian': [0, 1], 'E': 210000, 'A': 1, 'I': 4, 'L': 4000, 'a': 90},\
-              {'xu_hao': 1, 'jie_dian': [1, 2], 'E': 210000, 'A': 1, 'I': 4, 'L': 4000},\
-              {'xu_hao': 2, 'jie_dian': [2, 3], 'E':7500000,'A': 1, 'I': 4,'L': 4000}]
+gan_jian38=[{'xu_hao': 0, 'jie_dian': [0, 1], 'lian_jie':[10,0],'E': 210000, 'A': 1, 'I': 4, 'L': 4000, 'a': 90},\
+              {'xu_hao': 1, 'jie_dian': [1, 2], 'lian_jie':[0,1],'E': 210000, 'A': 1, 'I': 4, 'L': 4000},\
+              {'xu_hao': 2, 'jie_dian': [2, 3], 'lian_jie':[1,10],'E':7500000,'A': 1, 'I': 4,'L': 4000}]
 
 force38=[{'xu_hao':0,'wei_zhi':[0,1],'lei_xing':'10','duan_dian':[2000,2000],'F':15000},\
        {'xu_hao':1,'wei_zhi':[1,1],'lei_xing':'00','F':10000},\
@@ -43,8 +43,8 @@ force35=[{'xu_hao':0,'wei_zhi':[0,1],'lei_xing':'3','L':6000,'duan_dian':[0,0],'
        {'xu_hao':4,'wei_zhi':[3,3],'lei_xing':'01','F':30000000}]
 
 
-gan_jian31=[{'xu_hao': 0, 'jie_dian': [0, 1], 'L': 5000},\
-              {'xu_hao': 1, 'jie_dian': [1, 2], 'L': 5590, 'cos': 0.447, 'sin': -0.895}]
+gan_jian31=[{'xu_hao': 0, 'jie_dian': [0, 1], 'lian_jie':[0,0],'L': 5000},\
+              {'xu_hao': 1, 'jie_dian': [1, 2], 'lian_jie':[0,0],'L': 5590, 'cos': 0.447, 'sin': -0.895}]
 force31=[{'xu_hao':0,'wei_zhi':[1,1],'lei_xing':'00','F':30000,'a': 90},\
        {'xu_hao':1,'wei_zhi':[1,1],'lei_xing':'01','F':20000000},\
        {'xu_hao':2,'wei_zhi':[1,1],'lei_xing':'00','F':50000},\
