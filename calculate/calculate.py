@@ -54,7 +54,7 @@ def main():
     app=application(config=conf)
     ganl=gan_jian_lib(config=conf)
     ganl.add(file=1)
-    ganl.tong_ji()
+
     k=app.zheng_ti_jv_zhen(ganl) 
     print('原始整体刚度矩阵','\n',k)   
 
