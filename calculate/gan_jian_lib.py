@@ -62,11 +62,11 @@ class gan_jian_lib:##定义杆件库
                 match self.wei_yi_mu_ban[i][j]:
                     case 0:self.wei_yi_num+=1;self.wei_yi_xiang_liang_mu_ban[i]+=[0]
                     case x if x>=1:self.wei_yi_num+=x;self.wei_yi_xiang_liang_mu_ban[i]+=[1]*x
-        print('杆件数',self.gan_jian_num)
-        print('节点数',self.jie_dian_num)
-        print('位移数',self.wei_yi_num)
-        print('位移模板',self.wei_yi_mu_ban)
-        print('位移向量模板',self.wei_yi_xiang_liang_mu_ban)
+        # print('杆件数',self.gan_jian_num)
+        # print('节点数',self.jie_dian_num)
+        # print('位移数',self.wei_yi_num)
+        # print('位移模板',self.wei_yi_mu_ban)
+        # print('位移向量模板',self.wei_yi_xiang_liang_mu_ban)
         ##处理定位向量#########################################################################
         ##按节点生成
         '''

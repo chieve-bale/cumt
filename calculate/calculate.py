@@ -34,7 +34,7 @@ class config:
         self.force_cos=self.config['force']['cos']
         self.force_sin=self.config['force']['sin']
         self.force_L=self.config['force']['L']
-        self.force_duan_dian=self.config['force']['duan_dian']
+        self.force_duan_dian_jv=self.config['force']['duan_dian_jv']
         self.force_duan_dian_zhi=self.config['force']['duan_dian_zhi']
 
 

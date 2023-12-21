@@ -13,7 +13,7 @@ class gan_jian:##定义杆件的原始单元刚度矩阵
         self.L=L              ##杆件长度
         self.a=a              ##杆件角度，顺时针为正
         self.lian_jie=lian_jie##杆件连接类型
-        
+
         self.ding_wei=[0,0,0,0,0,0]##杆的定位向量
         self.wei_yi_num=[[1,1,1,0],[1,1,1,0]]   ##杆端位移数
         for x in [0,1]:
@@ -34,11 +34,11 @@ class gan_jian:##定义杆件的原始单元刚度矩阵
                 case 14:self.wei_yi_num[x]=[ 0, 0,-1, 0]  ##某某支座，限制弯矩
                 case 15:self.wei_yi_num[x]=[-1, 0, 0, 0]  ##铰支座，限制x轴
                 case 16:self.wei_yi_num[x]=[ 0,-1, 0, 0]  ##铰支座，限制y轴          
-        print('杆件的位移表达式',self.wei_yi_num)
+        # print('杆件的位移表达式',self.wei_yi_num)
         if cos==0 and sin==0:
             self.cos=math.cos(a/180*math.pi)
             self.sin=math.sin(a/180*math.pi)
-        elif round(cos*cos+sin*sin,1)==0.99:
+        elif round(cos*cos+sin*sin,1)==1:
             self.sin=sin          ##杆件角度正弦
             self.cos=cos          ##杆件角度余弦
         else :
@@ -52,7 +52,7 @@ class gan_jian:##定义杆件的原始单元刚度矩阵
                           [ 0, 0, 1, 0, 0, 0],\
                           [ 0, 0, 0, c, s, 0],\
                           [ 0, 0, 0,-s, c, 0],\
-                          [ 0, 0, 0, 0, 0, 1]])
+                          [ 0, 0, 0, 0, 0, 1]]).round(3)
         
         ##输入杆件代码,代码为数字字符，输出局部坐标系刚度矩阵。按照课本P227表格顺序
         i=self.i
@@ -71,3 +71,4 @@ class gan_jian:##定义杆件的原始单元刚度矩阵
                 pass
         ##整体坐标系下的刚度矩阵
         self.zheng_ti_zuo_biao_xi=self.TT.T@self.jv_bu_zuo_biao_xi@self.TT
+        print(self.zheng_ti_zuo_biao_xi)

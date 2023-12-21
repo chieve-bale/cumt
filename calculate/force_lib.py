@@ -26,7 +26,7 @@ class force_lib:
                         wei_zhi=can_shu['wei_zhi'],\
                         lei_xing=can_shu['lei_xing'],\
                         L=can_shu.get('L',self.config.force_L),\
-                        duan_dian=can_shu.get('duan_dian',self.config.force_duan_dian),\
+                        duan_dian_jv=can_shu.get('duan_dian_jv',self.config.force_duan_dian_jv),\
                         duan_dian_zhi=can_shu.get('duan_dian_zhi',self.config.force_duan_dian_zhi),\
                         F=can_shu['F'],\
                         a=can_shu.get('a',self.config.force_a),\
