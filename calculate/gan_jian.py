@@ -1,12 +1,10 @@
 import numpy as np
 import math
-import json
 
 class gan_jian:##定义杆件的原始单元刚度矩阵
     def __init__(self,xu_hao=0,jie_dian=[0,0],E=206000,A=1,I=1,L=1,a=0,cos=0,sin=0,lian_jie=[0,0]):##类初始化
         self.xu_hao=xu_hao    ##杆件序号
         self.jie_dian=jie_dian##杆件节点
-        self.ding_wei:list
         self.E=E              ##弹性模量
         self.A=A              ##截面面积
         self.I=I              ##截面惯性矩
@@ -15,6 +13,8 @@ class gan_jian:##定义杆件的原始单元刚度矩阵
         self.L=L              ##杆件长度
         self.a=a              ##杆件角度，顺时针为正
         self.lian_jie=lian_jie##杆件连接类型
+        
+        self.ding_wei=[0,0,0,0,0,0]##杆的定位向量
         self.wei_yi_num=[[1,1,1,0],[1,1,1,0]]   ##杆端位移数
         for x in [0,1]:
             match self.lian_jie[x]:
@@ -48,11 +48,11 @@ class gan_jian:##定义杆件的原始单元刚度矩阵
         s=self.sin
         c=self.cos
         self.TT=np.array([[ c, s, 0, 0, 0, 0],\
-                         [-s, c, 0, 0, 0, 0],\
-                         [ 0, 0, 1, 0, 0, 0],\
-                         [ 0, 0, 0, c, s, 0],\
-                         [ 0, 0, 0,-s, c, 0],\
-                         [ 0, 0, 0, 0, 0, 1]])
+                          [-s, c, 0, 0, 0, 0],\
+                          [ 0, 0, 1, 0, 0, 0],\
+                          [ 0, 0, 0, c, s, 0],\
+                          [ 0, 0, 0,-s, c, 0],\
+                          [ 0, 0, 0, 0, 0, 1]])
         
         ##输入杆件代码,代码为数字字符，输出局部坐标系刚度矩阵。按照课本P227表格顺序
         i=self.i

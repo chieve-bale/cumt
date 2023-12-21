@@ -1,6 +1,6 @@
 import numpy as np
 import math
-import json
+
 ##需要对均布力积分求杆端等效节点荷载
 class force:
     def __init__(self,xu_hao=0,wei_zhi=[0],lei_xing='00',L=1,duan_dian=[0,0],duan_dian_zhi=[1,1],F=1,a=0,cos=0,sin=0) -> None:
