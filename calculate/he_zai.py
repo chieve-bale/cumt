@@ -2,7 +2,7 @@ import numpy as np
 import math
 
 ##需要对均布力积分求杆端等效节点荷载
-class force:
+class he_zai:
     def __init__(self,xu_hao=0,wei_zhi=[0],lei_xing='00',L=1,duan_dian_jv=[0,0],duan_dian_zhi=[1,1],F=1,a=0,cos=0,sin=0) -> None:
         self.xu_hao=xu_hao
         self.wei_zhi=wei_zhi
@@ -22,11 +22,11 @@ class force:
             print('第%d号力输入有误，请检查角度输入！'%self.xu_hao)
 
         match self.lei_xing:
-            case '00':self.force=np.array([[self.F*self.cos,self.F*self.sin,0     ]])
-            case '01':self.force=np.array([[0              ,0              ,self.F]])
-            case '10':self.force=self.pu_tong_deng_xiao('10')
-            case '11':self.force=self.pu_tong_deng_xiao('11')
-            case '3' :self.force=self.jun_bu_deng_xiao('3')
+            case '00':self.he_zai=np.array([[self.F*self.cos,self.F*self.sin,0     ]])
+            case '01':self.he_zai=np.array([[0              ,0              ,self.F]])
+            case '10':self.he_zai=self.pu_tong_deng_xiao('10')
+            case '11':self.he_zai=self.pu_tong_deng_xiao('11')
+            case '3' :self.he_zai=self.jun_bu_deng_xiao('3')
     def pu_tong_deng_xiao(self,code):
         a=self.duan_dian_jv[0]
         b=self.duan_dian_jv[1]

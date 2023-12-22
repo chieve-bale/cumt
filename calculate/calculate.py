@@ -2,15 +2,15 @@ import numpy as np
 import math
 import json
 
-from force import force
-from force_lib import force_lib
+from he_zai import he_zai
+from he_zai_lib import he_zai_lib
 from gan_jian import gan_jian
 from gan_jian_lib import gan_jian_lib
 from application import application
 
 
-####force类。转化函数中的杆件长度L
-####force类，目前力的角度是整体坐标系下的角度，能否改成局部坐标系下的角度？？？？
+####he_zai类。转化函数中的杆件长度L
+####he_zai类，目前力的角度是整体坐标系下的角度，能否改成局部坐标系下的角度？？？？
 #桁架
 
 ##结构位移表达向量，用作后处理用
@@ -30,12 +30,12 @@ class config:
         self.gan_jian_cos=self.config['gan_jian']['cos']
         self.gan_jian_sin=self.config['gan_jian']['sin']
         self.gan_jian_lian_jie=self.config['gan_jian']['lian_jie']
-        self.force_a=self.config['force']['a']
-        self.force_cos=self.config['force']['cos']
-        self.force_sin=self.config['force']['sin']
-        self.force_L=self.config['force']['L']
-        self.force_duan_dian_jv=self.config['force']['duan_dian_jv']
-        self.force_duan_dian_zhi=self.config['force']['duan_dian_zhi']
+        self.he_zai_a=self.config['he_zai']['a']
+        self.he_zai_cos=self.config['he_zai']['cos']
+        self.he_zai_sin=self.config['he_zai']['sin']
+        self.he_zai_L=self.config['he_zai']['L']
+        self.he_zai_duan_dian_jv=self.config['he_zai']['duan_dian_jv']
+        self.he_zai_duan_dian_zhi=self.config['he_zai']['duan_dian_zhi']
 
 
 ###一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一一###  
@@ -58,10 +58,10 @@ def main():
     k=app.zheng_ti_jv_zhen(ganl) 
     print('原始整体刚度矩阵','\n',k)   
 
-    forl=force_lib(config=conf)
+    forl=he_zai_lib(config=conf)
     forl.add(file=1)
 
-    f=app.hand_force(forl)
+    f=app.hand_he_zai(forl)
     print('原始f','\n',f)
     # f=np.array([[0,0,0,50000,30000,20000000,0,0,0]])
     print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
