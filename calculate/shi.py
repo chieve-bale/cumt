@@ -1,7 +1,12 @@
 import numpy as np
 import json
 
-with open('./can_shu.json','r',encoding='utf-8') as f:
-    date=json.load(f,strict=False)
-    print(type(date))
-    print(date)
+a=199
+
+ty=type(a)
+print(ty)
+if ty==int or (ty==list and len(a)==1) or (ty==list and len(a)==2 and a[0]==a[1]) :
+    print('int')
+                
+if ty==list and len(a)==2:
+    print('list')

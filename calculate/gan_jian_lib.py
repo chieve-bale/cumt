@@ -24,7 +24,6 @@ class gan_jian_lib:##定义杆件库
         else:
             can_shu_s=json.load(f)['gan_jian']
             f.close()
-            print(type(can_shu_s))
             for can_shu in can_shu_s:
                 ##统计杆件数
                 self.gan_jian_num+=1

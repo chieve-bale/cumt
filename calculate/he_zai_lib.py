@@ -13,7 +13,7 @@ class he_zai_lib:
         match file:
             case 0:self.__add_hand()
             case 1:self.__add_auto()
-    def __add_auto(self):
+    def __add_auto(self,wei_yi_mu_ban):
         try:
             f=open('./can_shu.json',mode='r',encoding='utf-8')
         except:
@@ -23,16 +23,29 @@ class he_zai_lib:
             f.close()
             for can_shu in can_shu_s:
                 self.table+=[he_zai(xu_hao=can_shu['xu_hao'],\
-                        wei_zhi=can_shu['wei_zhi'],\
-                        lei_xing=can_shu['lei_xing'],\
-                        L=can_shu.get('L',self.config.he_zai_L),\
-                        duan_dian_jv=can_shu.get('duan_dian_jv',self.config.he_zai_duan_dian_jv),\
-                        duan_dian_zhi=can_shu.get('duan_dian_zhi',self.config.he_zai_duan_dian_zhi),\
-                        F=can_shu['F'],\
-                        a=can_shu.get('a',self.config.he_zai_a),\
-                        cos=can_shu.get('cos',self.config.he_zai_cos),\
-                        sin=can_shu.get('sin',self.config.he_zai_sin))]
+                            wei_zhi=can_shu['wei_zhi'],\
+                            lei_xing=can_shu['lei_xing'],\
+                            L=can_shu.get('L',self.config.he_zai_L),\
+                            duan_dian_jv=can_shu.get('duan_dian_jv',self.config.he_zai_duan_dian_jv),\
+                            duan_dian_zhi=can_shu.get('duan_dian_zhi',self.config.he_zai_duan_dian_zhi),\
+                            F=can_shu['F'],\
+                            a=can_shu.get('a',self.config.he_zai_a),\
+                            cos=can_shu.get('cos',self.config.he_zai_cos),\
+                            sin=can_shu.get('sin',self.config.he_zai_sin))]
                 self.he_zai_num+=1
+
+        for he_zai in self.table:
+            ty=type(he_zai.wei_zhi)
+
+            if ty==int or (ty==list and len(he_zai.wei_zhi)==1) or (ty==list and len(he_zai.wei_zhi)==2 and he_zai.wei_zhi[0]==he_zai.wei_zhi[1]):
+                if he_zai.lei_xing[0]=='0':
+                    pass
+                else:print('第%d号荷载的类型或者位置标注错误，请检查'%he_zai.xu_hao)
+            if ty==list and len(he_zai.wei_zhi)==2:
+                if he_zai.lei_xing[0]=='1' or he_zai.lei_xing[0]=='3':
+                    pass
+                else:print('第%d号荷载的类型或者位置标注错误，请检查'%he_zai.xu_hao)
+
 
     def show(self):
         print(self.table)
