@@ -1,4 +1,7 @@
 import numpy as np
+import json
 
-a=np([[1,2,3],[4,5,6],[7,8,9]])
-print(a[])
+with open('./can_shu.json','r',encoding='utf-8') as f:
+    date=json.load(f,strict=False)
+    print(type(date))
+    print(date)

@@ -18,12 +18,13 @@ class gan_jian_lib:##定义杆件库
             case 1:self.__add_auto()
     def __add_auto(self):
         try:
-            f=open('./gan_jian_lib.json',mode='r',encoding='utf-8')
+            f=open('./can_shu.json',mode='r',encoding='utf-8')
         except:
-            print('杆件库文件（gan_jian_lib.json）异常，请检查')
+            print('杆件库文件（can_shu.json）杆件部分异常，请检查')
         else:
-            can_shu_s=json.load(f)
+            can_shu_s=json.load(f)['gan_jian']
             f.close()
+            print(type(can_shu_s))
             for can_shu in can_shu_s:
                 ##统计杆件数
                 self.gan_jian_num+=1

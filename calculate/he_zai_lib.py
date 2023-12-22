@@ -15,11 +15,11 @@ class he_zai_lib:
             case 1:self.__add_auto()
     def __add_auto(self):
         try:
-            f=open('./he_zai.json',mode='r',encoding='utf-8')
+            f=open('./can_shu.json',mode='r',encoding='utf-8')
         except:
-            print('力库文件（he_zai.json）异常，请检查')
+            print('文件（can_shu.json）荷载部分异常，请检查')
         else:
-            can_shu_s=json.load(f)
+            can_shu_s=json.load(f)['he_zai']
             f.close()
             for can_shu in can_shu_s:
                 self.table+=[he_zai(xu_hao=can_shu['xu_hao'],\

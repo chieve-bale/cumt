@@ -56,16 +56,12 @@ he_zai31=[{'xu_hao':0,'wei_zhi':[1,1],'lei_xing':'00','F':30000,'a': 90},\
 ##with open('gan_jian_lib.json','r',encoding='utf-8') as f:
 ##    c=json.load(f)
 
+date={'gan_jian':[],'he_zai':[],'force':[],'wei_yi':[]}
 
+with open('./can_shu.json','r',encoding='utf-8') as f:
+    date.update(json.load(f))
 
-    
-
-with open('./he_zai.json','w',encoding='utf-8') as f:
-    json.dump(he_zai38,f,ensure_ascii=False,indent=2)
-with open('./gan_jian_lib.json','w',encoding='utf-8') as f:
-    json.dump(gan_jian38,f,ensure_ascii=False,indent=2)
-
-
-# with open('gan_jian_lib.json','r',encoding='utf-8') as f:
-#     c=json.load(f)
-# print(c)
+with open('./can_shu.json','w',encoding='utf-8') as f:
+     date['gan_jian']=gan_jian38
+     date['he_zai']=he_zai38
+     json.dump(date,f,ensure_ascii=False,indent=2)
